@@ -1,0 +1,16 @@
+{
+    "name": "Movable",
+    "rootNamespace": "Asteroids.Movable",
+    "references": [
+        "GUID:f049d048a5f9f45d98ef1a2e2e983711"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
