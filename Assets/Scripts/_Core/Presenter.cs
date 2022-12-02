@@ -1,14 +1,16 @@
 namespace Core
 {
-    public abstract class Presenter
+    public abstract class Presenter<TOne,TTwo> 
+        where TOne: Model
+        where TTwo: View
     {
-        private Model _model;
-        private View _view;
+        protected TOne model;
+        protected TTwo view;
 
-        public Presenter(Model model, View view)
+        public Presenter(TOne model, TTwo view)
         {
-            _model = model;
-            _view = view;
+            this.model = model;
+            this.view = view;
         }
     }
 }

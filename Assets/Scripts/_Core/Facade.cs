@@ -1,10 +1,12 @@
 namespace Core
 {
-    public abstract class Facade
+    public abstract class Facade<TOne,TTwo> 
+        where TOne: Model
+        where TTwo: View
     {
-        private Presenter _presenter;
+        private Presenter<TOne,TTwo> _presenter;
         
-        public Facade(Presenter presenter)
+        public Facade(Presenter<TOne,TTwo> presenter)
         {
             _presenter = presenter;
         }
