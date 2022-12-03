@@ -10,5 +10,10 @@ namespace Core
         {
             _presenter = presenter;
         }
+
+        public virtual void Destroy()
+        {
+            _presenter.Destroy();
+        }
     }
 }

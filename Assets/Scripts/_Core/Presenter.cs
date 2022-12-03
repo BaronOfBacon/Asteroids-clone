@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Core
 {
     public abstract class Presenter<TOne,TTwo> 
@@ -11,6 +13,12 @@ namespace Core
         {
             this.model = model;
             this.view = view;
+        }
+
+        //TODO refactor it with object pulling
+        public void Destroy()
+        {
+            GameObject.Destroy(view.gameObject);
         }
     }
 }
