@@ -1,0 +1,12 @@
+using Core;
+
+namespace NAMESPACE
+{
+    public class NAMEPresenter : Presenter<NAMEModel, NAMEView>
+    {
+        public NAMEPresenter(NAMEModel model, NAMEView view) : base(model, view)
+        {
+            
+        }
+    }
+}

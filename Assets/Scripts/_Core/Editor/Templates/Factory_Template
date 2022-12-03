@@ -1,0 +1,13 @@
+using System;
+using Core;
+
+namespace NAMESPACE
+{
+    public class NAMEFactory : AbstractObjectFactory<NAMEFacade>
+    {
+        public override NAMEFacade Create(params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

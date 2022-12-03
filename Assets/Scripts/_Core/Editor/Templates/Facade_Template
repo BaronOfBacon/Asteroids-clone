@@ -1,0 +1,11 @@
+using Core;
+
+namespace NAMESPACE
+{
+    public class NAMEFacade : Facade<NAMEModel, NAMEView>
+    {
+        public NAMEFacade(Presenter<NAMEModel, NAMEView> presenter) : base(presenter)
+        {
+        }
+    }
+}

@@ -1,0 +1,8 @@
+using Core;
+
+namespace NAMESPACE
+{
+    public class NAMEModel : Model
+    {
+    }
+}
