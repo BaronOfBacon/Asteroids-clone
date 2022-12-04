@@ -4,7 +4,7 @@ namespace Core
         where TOne: Model
         where TTwo: View
     {
-        private Presenter<TOne,TTwo> _presenter;
+        protected Presenter<TOne,TTwo> _presenter;
         
         public Facade(Presenter<TOne,TTwo> presenter)
         {

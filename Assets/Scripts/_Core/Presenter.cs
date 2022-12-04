@@ -16,7 +16,7 @@ namespace Core
         }
 
         //TODO refactor it with object pulling
-        public void Destroy()
+        public virtual void Destroy()
         {
             GameObject.Destroy(view.gameObject);
         }
