@@ -5,6 +5,7 @@ namespace Asteroids.Movable
 {
     public class MovableModel : Model
     {
+        public MovableData Data => _data;
         public float Mass => _data.mass;
         public Vector2 Position
         {
@@ -15,7 +16,7 @@ namespace Asteroids.Movable
                 //notify movable presenter about mass change
             }
         }
-        public Quaternion rotation
+        public Quaternion Rotation
         {
             get => _data.rotation;
             set
