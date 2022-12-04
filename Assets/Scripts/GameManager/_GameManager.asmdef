@@ -1,0 +1,18 @@
+{
+    "name": "GameManager",
+    "rootNamespace": "Asteroids.GameManager",
+    "references": [
+        "GUID:f049d048a5f9f45d98ef1a2e2e983711",
+        "GUID:2749ffbd14e61437aa73c1d079f19f5b",
+        "GUID:d6ef394006dd84e8ca7d5c6bbffff5be"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
