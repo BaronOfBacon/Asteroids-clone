@@ -38,7 +38,7 @@ namespace Core.Editor
 
             GUILayout.Space(10);
             
-            if (GUILayout.Button("Test"))
+            if (GUILayout.Button("Create entity"))
             {
                 if (!Directory.Exists(_pathToContainingFolder))
                 {
@@ -76,11 +76,11 @@ namespace Core.Editor
                     if(fileName.Contains("asmdef"))
                     {
                         fileName =$"/_{_newEntityName}.asmdef";
-                        name = newFileName;
+                        name = _newEntityName;
                     }
                     else
                     {
-                        fileName = $"/{newFileName}.cs";
+                        fileName = $"/{_newEntityName}{newFileName}.cs";
                         name = _newEntityName;
                     }
 
