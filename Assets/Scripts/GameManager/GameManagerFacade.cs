@@ -12,9 +12,9 @@ namespace Asteroids.GameManager
             _presenter = (GameManagerPresenter) presenter;
         }
 
-        public void StartGame(MovableSystemView movableSystemView, GameObject prefab)
+        public void StartGame(MovableSystemView movableSystemView, GameObject prefab, GameSettings gameSettings)
         {
-            _presenter.StartGame(movableSystemView, prefab);
+            _presenter.StartGame(movableSystemView, prefab, gameSettings);
         }
     }
 }

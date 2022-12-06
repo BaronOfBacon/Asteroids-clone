@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Asteroids.Movable;
 using Core;
 using UnityEngine;
@@ -10,7 +9,7 @@ namespace Asteroids.MovableSystem
     public class MovableSystemModel : Model
     {
         public EventHandler MovablesChanged;
-        
+        public Vector2 fieldBoundariesDistance;
         public IReadOnlyList<MovableFacade> Movables => _movables;
 
         private List<MovableFacade> _movables = new List<MovableFacade>();

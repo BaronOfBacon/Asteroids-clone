@@ -1,4 +1,3 @@
-using System;
 using Asteroids.Movable;
 using Asteroids.MovableSystem;
 using Core;
@@ -11,30 +10,37 @@ namespace Asteroids.GameManager
         private MovableSystemFacade _movableSystemFacade;
         private MovableFactory _movableFactory;
         private MovableEventsHolder _movableEventsHolder;
+        private GameSettings _gameSettings;
         
         public GameManagerPresenter(GameManagerModel model, GameManagerView view) : base(model, view)
         {
             _movableEventsHolder = new MovableEventsHolder();
         }
 
-        public void StartGame(MovableSystemView movableSystemView, GameObject prefab)
+        public void StartGame(MovableSystemView movableSystemView, GameObject prefab, GameSettings gameSettings)
         {
+            _gameSettings = gameSettings;
+            
             var movableSystemFactory = new MovableSystemFactory(_movableEventsHolder);
-            _movableSystemFacade = movableSystemFactory.Create(movableSystemView);
+            _movableSystemFacade = movableSystemFactory.Create(movableSystemView, _gameSettings.GameFieldSize);
             
             _movableFactory = new MovableFactory(_movableEventsHolder);
             
             Debug.Log("Game started!");
 
+            //TODO Init game (spawn player, asteroids)
+            
             #region Test
+            
             var movable = _movableFactory.Create(
                 new MovableData()
                 {
-                    mass = 0f, acceleration = Vector2.zero, position = Vector2.zero, rotation = Quaternion.identity,
-                    velocity = Vector2.up * 3f
+                    mass = 0f, acceleration = Vector2.zero/*Vector2.right * 2f*/, position = Vector2.zero, rotation = Quaternion.identity,
+                    velocity = new Vector2(-0.3f,0.7f) * 2f
                 }, prefab);
             
             //movable.Destroy();
+
             #endregion
         }
     }

@@ -3,7 +3,8 @@
     "rootNamespace": "Asteroids.MovableSystem",
     "references": [
         "GUID:f049d048a5f9f45d98ef1a2e2e983711",
-        "GUID:2749ffbd14e61437aa73c1d079f19f5b"
+        "GUID:2749ffbd14e61437aa73c1d079f19f5b",
+        "GUID:2e13b75d1ba1946658cab19954ab6957"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

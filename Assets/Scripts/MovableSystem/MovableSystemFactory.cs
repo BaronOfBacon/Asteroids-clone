@@ -1,5 +1,6 @@
 using Asteroids.Movable;
 using Core;
+using UnityEngine;
 
 namespace Asteroids.MovableSystem
 {
@@ -16,6 +17,7 @@ namespace Asteroids.MovableSystem
             var model = new MovableSystemModel();
             var view = (MovableSystemView)args[0];
             var presenter = new MovableSystemPresenter(model, view);
+            presenter.Init((Vector2)args[1]);
             var facade = new MovableSystemFacade(presenter);
             _movableEventsHolder.MovableCreated += facade.AddMovable;
             _movableEventsHolder.MovableDestroyed += facade.DeleteMovable;
