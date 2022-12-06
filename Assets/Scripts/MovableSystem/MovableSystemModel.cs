@@ -10,6 +10,9 @@ namespace Asteroids.MovableSystem
     {
         public EventHandler MovablesChanged;
         public Vector2 fieldBoundariesDistance;
+        public float forwardAccelerationMultiplier;
+        public float maxSpeed;
+        
         public IReadOnlyList<MovableFacade> Movables => _movables;
 
         private List<MovableFacade> _movables = new List<MovableFacade>();

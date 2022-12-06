@@ -9,16 +9,15 @@ namespace Asteroids.MovableSystem
     public class MovableSystemPresenter : Presenter<MovableSystemModel, MovableSystemView>
     {
         private FieldCalculationHelper _fieldCalculationHelper;
-        
+
         public MovableSystemPresenter(MovableSystemModel model, MovableSystemView view) : base(model, view)
         {
             model.MovablesChanged += HandleMovablesChanged;
             view.UpdateCalled += Update;
         }
 
-        public void Init(Vector2 gameFieldSize)
+        public void Init()
         {
-            model.fieldBoundariesDistance = new Vector2(gameFieldSize.x / 2f, gameFieldSize.y / 2f);
             _fieldCalculationHelper = new FieldCalculationHelper(model.fieldBoundariesDistance);
         }
         
@@ -26,9 +25,19 @@ namespace Asteroids.MovableSystem
         {
             foreach (var movable in model.Movables)
             {
+                movable.Transform.rotation = movable.Rotation;
+                
+                if (movable.AccelerateForward)
+                {
+                    movable.Acceleration =  model.forwardAccelerationMultiplier * movable.Transform.up;
+                }
+                else if (movable.Acceleration != Vector2.zero)
+                    movable.Acceleration = Vector2.zero;
+                
                 if (movable.Acceleration != Vector2.zero)
                 {
                     movable.Velocity += movable.Acceleration * Time.deltaTime;
+                    movable.Velocity = Vector3.ClampMagnitude(movable.Velocity, model.maxSpeed);
                 }
                 
                 var newPosition = movable.Position + movable.Velocity * Time.deltaTime;
@@ -38,7 +47,7 @@ namespace Asteroids.MovableSystem
                     if (!_fieldCalculationHelper.NewPositionInPortal(out newPosition, movable.Position,
                         movable.Velocity))
                     {
-                        throw new SystemException("Can't calculate new position!");
+                        Debug.LogError("Can't calculate new position!");
                     }
                 }
                 

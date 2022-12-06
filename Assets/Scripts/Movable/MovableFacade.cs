@@ -29,6 +29,12 @@ namespace Asteroids.Movable
             get => _presenter.Acceleration;
             set => _presenter.Acceleration = value;
         }
+
+        public bool AccelerateForward
+        {
+            get => _presenter.AccelerateForward;
+            set => _presenter.AccelerateForward = value;
+        }
         
         private MovablePresenter _presenter;
         

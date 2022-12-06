@@ -10,7 +10,7 @@ namespace Asteroids.GameManager
         [SerializeField]
         private MovableSystemView _movableSystemView;
         [SerializeField]
-        private GameObject _movableViewPrefab;
+        private GameObject _playerPrefab;
         [SerializeField] 
         private GameSettings _gameSettings;
         
@@ -18,7 +18,7 @@ namespace Asteroids.GameManager
         {
             GameManagerFactory factory = new GameManagerFactory();
             var gameManager = factory.Create(_gameManagerView);
-            gameManager.StartGame(_movableSystemView, _movableViewPrefab, _gameSettings);
+            gameManager.StartGame(_movableSystemView, _playerPrefab, _gameSettings);
         }
     }
 }

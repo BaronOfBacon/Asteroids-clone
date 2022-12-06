@@ -9,5 +9,6 @@ namespace Asteroids.Movable
         public Quaternion rotation;
         public Vector2 velocity;
         public Vector2 acceleration;
+        public bool accelerateForward;
     }
 }
