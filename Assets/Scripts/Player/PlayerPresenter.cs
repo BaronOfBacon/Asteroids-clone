@@ -11,6 +11,7 @@ namespace Asteroids.Player
         {
             BindToInputObserver();
             view.OnUpdate += Update;
+            model.DeathTracker.Death += HandleDeath;
         }
 
         ~PlayerPresenter()
@@ -32,6 +33,11 @@ namespace Asteroids.Player
         private void Update(object sender, EventArgs args)
         {
             model.Movable.Rotation *= Quaternion.Euler(Vector3.forward * model.RotationForce);
+        }
+
+        private void HandleDeath(object sender, EventArgs args)
+        {
+            Debug.Log("Player died!");
         }
     }
 }

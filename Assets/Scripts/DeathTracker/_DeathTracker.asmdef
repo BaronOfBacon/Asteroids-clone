@@ -1,11 +1,8 @@
 {
-    "name": "Player",
-    "rootNamespace": "Asteroids.Player",
+    "name": "DeathTracker",
+    "rootNamespace": "Asteroids.DeathTracker",
     "references": [
-        "GUID:f049d048a5f9f45d98ef1a2e2e983711",
-        "GUID:2749ffbd14e61437aa73c1d079f19f5b",
-        "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:ec5cfb410a8284a7d8c123a8ce9ea454"
+        "GUID:f049d048a5f9f45d98ef1a2e2e983711"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

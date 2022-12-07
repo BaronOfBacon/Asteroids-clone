@@ -1,3 +1,4 @@
+using Asteroids.DeathTracker;
 using Asteroids.Movable;
 using Asteroids.MovableSystem;
 using Asteroids.Player;
@@ -10,6 +11,7 @@ namespace Asteroids.GameManager
     {
         private MovableSystemFacade _movableSystemFacade;
         private MovableFactory _movableFactory;
+        private DeathTrackerFactory _deathTrackerFactory;
         private PlayerFactory _playerFactory;
         private MovableEventsHolder _movableEventsHolder;
         private GameSettings _gameSettings;
@@ -32,8 +34,9 @@ namespace Asteroids.GameManager
                 accelerationMultiplier, maxSpeed);
             
             _movableFactory = new MovableFactory(_movableEventsHolder);
-
-            _playerFactory = new PlayerFactory(_movableFactory);
+            _deathTrackerFactory = new DeathTrackerFactory();
+            
+            _playerFactory = new PlayerFactory(_movableFactory, _deathTrackerFactory);
             
             Debug.Log("Game started!");
 

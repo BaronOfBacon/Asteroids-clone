@@ -1,4 +1,5 @@
 using System;
+using Asteroids.DeathTracker;
 using Asteroids.Movable;
 using Core;
 using UnityEngine;
@@ -8,10 +9,12 @@ namespace Asteroids.Player
     public class PlayerFactory : AbstractObjectFactory<PlayerFacade>
     {
         private MovableFactory _movableFactory;
+        private DeathTrackerFactory _deathTrackerFactory;
 
-        public PlayerFactory(MovableFactory movableFactory)
+        public PlayerFactory(MovableFactory movableFactory, DeathTrackerFactory deathTrackerFactory)
         {
             _movableFactory = movableFactory;
+            _deathTrackerFactory = deathTrackerFactory;
         }
         
         /// <summary>
@@ -30,11 +33,12 @@ namespace Asteroids.Player
             var gameObject = GameObject.Instantiate(prefab);
 
             var movableFacade = _movableFactory.Create(movableData, gameObject, false);
+            var deathTrackerFacade = _deathTrackerFactory.Create(gameObject, false);
             
             var view = gameObject.GetComponentInChildren<PlayerView>();
-            var model = new PlayerModel(movableFacade, inputObserver, playerRotationSpeed);
+            var model = new PlayerModel(movableFacade, inputObserver, playerRotationSpeed, deathTrackerFacade);
             var presenter = new PlayerPresenter(model, view);
-            //sdfdsf
+            
             return new PlayerFacade(presenter);
         }
     }
