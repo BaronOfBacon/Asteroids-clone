@@ -47,7 +47,8 @@ namespace Asteroids.GameManager
                 acceleration = Vector2.zero /*Vector2.right * 2f*/,
                 position = Vector2.zero,
                 rotation = Quaternion.FromToRotation(Vector3.up, new Vector2(-0.3f, 0.7f)),
-                velocity = Vector2.zero /*new Vector2(-0.3f, 0.7f) * 2f*/
+                velocity = Vector2.zero /*new Vector2(-0.3f, 0.7f) * 2f*/,
+                friction = gameSettings.PlayerFriction
             };
 
             IPlayerInputObserver inputObserver = new PlayerInputObserver();

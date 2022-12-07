@@ -16,7 +16,6 @@ namespace Asteroids.Movable
                 view.transform.position = model.Position;
             }
         }
-
         public Quaternion Rotation
         {
             get => model.Rotation;
@@ -32,11 +31,16 @@ namespace Asteroids.Movable
             get => model.Acceleration;
             set => model.Acceleration = value;
         }
-
         public bool AccelerateForward
         {
             get => model.AccelerateForward;
             set => model.AccelerateForward = value;
+        }
+
+        public float Friction
+        {
+            get => model.Friction;
+            set => model.Friction = value;
         }
         
         public MovablePresenter(MovableModel model, MovableView view) : base(model, view)

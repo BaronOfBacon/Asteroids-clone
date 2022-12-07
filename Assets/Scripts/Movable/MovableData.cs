@@ -10,5 +10,6 @@ namespace Asteroids.Movable
         public Vector2 velocity;
         public Vector2 acceleration;
         public bool accelerateForward;
+        public float friction;
     }
 }

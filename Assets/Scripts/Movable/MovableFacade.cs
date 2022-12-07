@@ -29,13 +29,16 @@ namespace Asteroids.Movable
             get => _presenter.Acceleration;
             set => _presenter.Acceleration = value;
         }
-
         public bool AccelerateForward
         {
             get => _presenter.AccelerateForward;
             set => _presenter.AccelerateForward = value;
         }
-        
+        public float Friction
+        {
+            get => _presenter.Friction;
+            set => _presenter.Friction = value;
+        }
         private MovablePresenter _presenter;
         
         public MovableFacade(Presenter<MovableModel, MovableView> presenter) : base(presenter)

@@ -37,9 +37,14 @@ namespace Asteroids.MovableSystem
                 if (movable.Acceleration != Vector2.zero)
                 {
                     movable.Velocity += movable.Acceleration * Time.deltaTime;
-                    movable.Velocity = Vector3.ClampMagnitude(movable.Velocity, model.maxSpeed);
+                    
                 }
-                
+
+                var timeDependentFriction = movable.Friction * Time.deltaTime;
+                var speedWithFriction = movable.Velocity.magnitude - timeDependentFriction;
+                var maxSpeed = Mathf.Clamp(speedWithFriction, 0, model.maxSpeed);
+                movable.Velocity = Vector3.ClampMagnitude(movable.Velocity, maxSpeed);
+
                 var newPosition = movable.Position + movable.Velocity * Time.deltaTime;
 
                 if (!_fieldCalculationHelper.IsInsideOfBoundaries(newPosition))

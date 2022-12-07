@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameFieldSize: {x: 21, y: 13}
   _maxSpeed: 15
-  forwardAccelerationMultiplier: 5
+  forwardAccelerationMultiplier: 10
+  _playerRotationSpeed: 0.3
+  _playerFriction: 1.7
