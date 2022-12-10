@@ -2,6 +2,8 @@ using Asteroids.DeathTracker;
 using Asteroids.Movable;
 using Asteroids.MovableSystem;
 using Asteroids.Player;
+using Asteroids.RegularWeapon;
+using Asteroids.Weapon.Projectile;
 using Core;
 using UnityEngine;
 
@@ -12,6 +14,8 @@ namespace Asteroids.GameManager
         private MovableSystemFacade _movableSystemFacade;
         private MovableFactory _movableFactory;
         private DeathTrackerFactory _deathTrackerFactory;
+        private RegularWeaponFactory _regularWeaponFactory;
+        private ProjectileFactory _projectileFactory;
         private PlayerFactory _playerFactory;
         private MovableEventsHolder _movableEventsHolder;
         private GameSettings _gameSettings;
@@ -35,8 +39,10 @@ namespace Asteroids.GameManager
             
             _movableFactory = new MovableFactory(_movableEventsHolder);
             _deathTrackerFactory = new DeathTrackerFactory();
+            _regularWeaponFactory = new RegularWeaponFactory();
+            _projectileFactory = new ProjectileFactory(gameSettings.ProjectilePrefab, _movableFactory);
             
-            _playerFactory = new PlayerFactory(_movableFactory, _deathTrackerFactory);
+            _playerFactory = new PlayerFactory(_movableFactory, _deathTrackerFactory, _regularWeaponFactory);
             
             Debug.Log("Game started!");
 
@@ -56,7 +62,8 @@ namespace Asteroids.GameManager
 
             IPlayerInputObserver inputObserver = new PlayerInputObserver();
             
-            _playerFactory.Create(prefab, movableData, inputObserver, gameSettings.PlayerRotationSpeed);
+            _playerFactory.Create(prefab, movableData, inputObserver, gameSettings.PlayerRotationSpeed, 
+                gameSettings.ProjectilePrefab, gameSettings.ProjectileSpeed, _projectileFactory);
             
             /*bool isPrefab = true;
             var movable = _movableFactory.Create(

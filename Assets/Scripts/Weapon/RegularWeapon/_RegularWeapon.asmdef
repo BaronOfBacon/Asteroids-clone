@@ -1,14 +1,11 @@
 {
-    "name": "Player",
-    "rootNamespace": "Asteroids.Player",
+    "name": "RegularWeapon",
+    "rootNamespace": "Asteroids.Weapon.RegularWeapon",
     "references": [
         "GUID:f049d048a5f9f45d98ef1a2e2e983711",
-        "GUID:2749ffbd14e61437aa73c1d079f19f5b",
-        "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:ec5cfb410a8284a7d8c123a8ce9ea454",
-        "GUID:18a35f11008c34b3c8e0a3724553d89a",
+        "GUID:e592592c548dc401c8bf509e5c0e9724",
         "GUID:7a4348ca743b1412895649fd4d632ced",
-        "GUID:e592592c548dc401c8bf509e5c0e9724"
+        "GUID:2749ffbd14e61437aa73c1d079f19f5b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -10,6 +10,9 @@ namespace Asteroids.GameManager
         public float ForwardAccelerationMultiplier => forwardAccelerationMultiplier;
         public float PlayerRotationSpeed => _playerRotationSpeed;
         public float PlayerFriction => _playerFriction;
+        public GameObject ProjectilePrefab => _projectilePrefab;
+        public float ProjectileSpeed => _projectileSpeed;
+        
         
         [SerializeField] 
         private Vector2 _gameFieldSize = new (21,13);
@@ -21,6 +24,10 @@ namespace Asteroids.GameManager
         private float _playerRotationSpeed = 0.3f;
         [SerializeField]
         private float _playerFriction = 1f;
+        [SerializeField] 
+        private GameObject _projectilePrefab;
+        [SerializeField] 
+        private float _projectileSpeed = 1f;
 
     }
 }

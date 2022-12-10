@@ -39,6 +39,11 @@ namespace Asteroids.Movable
             get => _presenter.Friction;
             set => _presenter.Friction = value;
         }
+        public bool DestroyOutsideTheField
+        {
+            get => _presenter.DestroyOutsideTheField;
+            set => _presenter.DestroyOutsideTheField = value;
+        }
         private MovablePresenter _presenter;
         
         public MovableFacade(Presenter<MovableModel, MovableView> presenter) : base(presenter)

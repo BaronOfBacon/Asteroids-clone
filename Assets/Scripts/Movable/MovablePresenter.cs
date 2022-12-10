@@ -36,12 +36,17 @@ namespace Asteroids.Movable
             get => model.AccelerateForward;
             set => model.AccelerateForward = value;
         }
-
         public float Friction
         {
             get => model.Friction;
             set => model.Friction = value;
         }
+        public bool DestroyOutsideTheField
+        {
+            get => model.DestroyOutsideTheField;
+            set => model.DestroyOutsideTheField = value;
+        }
+        
         
         public MovablePresenter(MovableModel model, MovableView view) : base(model, view)
         {

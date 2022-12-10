@@ -46,6 +46,15 @@ namespace Asteroids.Player
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""13d2f458-3b63-43e4-9064-24d68b0fca44"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -92,6 +101,17 @@ namespace Asteroids.Player
                     ""action"": ""Thrust"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""679f312a-fb9a-4e18-abf5-41ea01ff6aa3"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -102,6 +122,7 @@ namespace Asteroids.Player
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Rotation = m_Player.FindAction("Rotation", throwIfNotFound: true);
             m_Player_Thrust = m_Player.FindAction("Thrust", throwIfNotFound: true);
+            m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -163,12 +184,14 @@ namespace Asteroids.Player
         private IPlayerActions m_PlayerActionsCallbackInterface;
         private readonly InputAction m_Player_Rotation;
         private readonly InputAction m_Player_Thrust;
+        private readonly InputAction m_Player_Fire;
         public struct PlayerActions
         {
             private @InputActions m_Wrapper;
             public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Rotation => m_Wrapper.m_Player_Rotation;
             public InputAction @Thrust => m_Wrapper.m_Player_Thrust;
+            public InputAction @Fire => m_Wrapper.m_Player_Fire;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -184,6 +207,9 @@ namespace Asteroids.Player
                     @Thrust.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrust;
                     @Thrust.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrust;
                     @Thrust.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrust;
+                    @Fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                    @Fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                    @Fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -194,6 +220,9 @@ namespace Asteroids.Player
                     @Thrust.started += instance.OnThrust;
                     @Thrust.performed += instance.OnThrust;
                     @Thrust.canceled += instance.OnThrust;
+                    @Fire.started += instance.OnFire;
+                    @Fire.performed += instance.OnFire;
+                    @Fire.canceled += instance.OnFire;
                 }
             }
         }
@@ -202,6 +231,7 @@ namespace Asteroids.Player
         {
             void OnRotation(InputAction.CallbackContext context);
             void OnThrust(InputAction.CallbackContext context);
+            void OnFire(InputAction.CallbackContext context);
         }
     }
 }

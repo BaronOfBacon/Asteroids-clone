@@ -23,6 +23,8 @@ namespace Asteroids.MovableSystem
         
         private void Update(object sender, EventArgs args)
         {
+            model.DestroyMarkedMovables();
+            
             foreach (var movable in model.Movables)
             {
                 movable.Transform.rotation = movable.Rotation;
@@ -37,7 +39,6 @@ namespace Asteroids.MovableSystem
                 if (movable.Acceleration != Vector2.zero)
                 {
                     movable.Velocity += movable.Acceleration * Time.deltaTime;
-                    
                 }
 
                 var timeDependentFriction = movable.Friction * Time.deltaTime;
@@ -49,6 +50,12 @@ namespace Asteroids.MovableSystem
 
                 if (!_fieldCalculationHelper.IsInsideOfBoundaries(newPosition))
                 {
+                    if (movable.DestroyOutsideTheField)
+                    {
+                        model.DeleteMovable(movable);
+                        continue;
+                    }
+                    
                     if (!_fieldCalculationHelper.NewPositionInPortal(out newPosition, movable.Position,
                         movable.Velocity))
                     {

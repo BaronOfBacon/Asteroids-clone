@@ -17,3 +17,5 @@ MonoBehaviour:
   forwardAccelerationMultiplier: 10
   _playerRotationSpeed: 0.3
   _playerFriction: 1.7
+  _projectilePrefab: {fileID: 6877371903405823814, guid: fb80b421f82b142d0ac20388dfd04e94, type: 3}
+  _projectileSpeed: 10

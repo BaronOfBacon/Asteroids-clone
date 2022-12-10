@@ -37,7 +37,12 @@ namespace Asteroids.Movable
             get => _data.friction;
             set => _data.friction = value;
         }
-        
+        public bool DestroyOutsideTheField
+        {
+            get => _data.destroyOutsideTheField;
+            set => _data.destroyOutsideTheField = value;
+        }
+
         private MovableData _data;
 
         public MovableModel(MovableData data)

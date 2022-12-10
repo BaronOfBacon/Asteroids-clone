@@ -19,12 +19,14 @@ namespace Asteroids.Player
 
             _inputActions.Player.Thrust.started += HandleThrustInput;
             _inputActions.Player.Thrust.canceled += HandleThrustInput;
+            _inputActions.Player.Fire.started += HandleFireInput;
         }
 
         ~PlayerInputObserver()
         {
             _inputActions.Player.Thrust.started -= HandleThrustInput;
             _inputActions.Player.Thrust.canceled -= HandleThrustInput;
+            _inputActions.Player.Fire.started -= HandleFireInput;
         }
 
         private void HandleThrustInput(InputAction.CallbackContext context)
@@ -38,7 +40,7 @@ namespace Asteroids.Player
         
         private void HandleFireInput(InputAction.CallbackContext context)
         {
-           throw new NotImplementedException();
+            FireInputDetected?.Invoke(this, null);
         }
         
         private void HandleLaserFireInput(InputAction.CallbackContext context)
