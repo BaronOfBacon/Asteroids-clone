@@ -17,15 +17,17 @@ namespace Asteroids.Player
 
         ~PlayerPresenter()
         {
-            model.InputObserver.ThrustInputDetected -= HandleThrust;
-            model.InputObserver.FireInputDetected -= HandleFire;
             view.OnUpdate -= Update;
+            model.InputObserver.ThrustInputDetected -= HandleThrust;
+            model.InputObserver.RegularFireInputDetected -= HandleFire;
+            model.InputObserver.LaserFireInputDetected -= HandleLaserFire;
         }
 
         private void BindToInputObserver()
         {
             model.InputObserver.ThrustInputDetected += HandleThrust;
-            model.InputObserver.FireInputDetected += HandleFire;
+            model.InputObserver.RegularFireInputDetected += HandleFire;
+            model.InputObserver.LaserFireInputDetected += HandleLaserFire;
         }
 
         private void Update(object sender, EventArgs args)
@@ -45,7 +47,12 @@ namespace Asteroids.Player
 
         private void HandleFire(object sender, EventArgs args)
         {
-            model.RegularWeapon.TryShoot(view.transform.up);
+            model.RegularWeapon.TryShoot();
+        }
+
+        private void HandleLaserFire(object sender, EventArgs args)
+        {
+            model.LaserWeapon.TryShoot();
         }
     }
 }

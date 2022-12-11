@@ -1,10 +1,8 @@
 {
-    "name": "MovableSystem",
-    "rootNamespace": "Asteroids.MovableSystem",
+    "name": "_Helper",
+    "rootNamespace": "Asteroids.Helpers",
     "references": [
-        "GUID:f049d048a5f9f45d98ef1a2e2e983711",
-        "GUID:2749ffbd14e61437aa73c1d079f19f5b",
-        "GUID:c86e4bb4827ed48e3b2f322b94ee3c08"
+        "_Tools"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

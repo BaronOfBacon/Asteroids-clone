@@ -1,4 +1,6 @@
 using Asteroids.DeathTracker;
+using Asteroids.Helpers;
+using Asteroids.LaserWeapon;
 using Asteroids.Movable;
 using Asteroids.MovableSystem;
 using Asteroids.Player;
@@ -16,6 +18,7 @@ namespace Asteroids.GameManager
         private DeathTrackerFactory _deathTrackerFactory;
         private RegularWeaponFactory _regularWeaponFactory;
         private ProjectileFactory _projectileFactory;
+        private LaserWeaponFactory _laserWeaponFactory;
         private PlayerFactory _playerFactory;
         private MovableEventsHolder _movableEventsHolder;
         private GameSettings _gameSettings;
@@ -33,16 +36,22 @@ namespace Asteroids.GameManager
             var accelerationMultiplier = gameSettings.ForwardAccelerationMultiplier;
             var maxSpeed = gameSettings.MaxSpeed;
             
+            var boundariesDistance = new Vector2(fieldSize.x / 2f, fieldSize.y / 2f);
+
+            var fieldCalculationHelper = new FieldCalculationHelper(boundariesDistance);
+            
             var movableSystemFactory = new MovableSystemFactory(_movableEventsHolder);
-            _movableSystemFacade = movableSystemFactory.Create(movableSystemView, fieldSize, 
-                accelerationMultiplier, maxSpeed);
+            _movableSystemFacade = movableSystemFactory.Create(movableSystemView, 
+                accelerationMultiplier, maxSpeed, fieldCalculationHelper);
             
             _movableFactory = new MovableFactory(_movableEventsHolder);
             _deathTrackerFactory = new DeathTrackerFactory();
             _regularWeaponFactory = new RegularWeaponFactory();
+            _laserWeaponFactory = new LaserWeaponFactory();
             _projectileFactory = new ProjectileFactory(gameSettings.ProjectilePrefab, _movableFactory);
             
-            _playerFactory = new PlayerFactory(_movableFactory, _deathTrackerFactory, _regularWeaponFactory);
+            _playerFactory = new PlayerFactory(_movableFactory, _deathTrackerFactory, _regularWeaponFactory, 
+                _laserWeaponFactory, fieldCalculationHelper);
             
             Debug.Log("Game started!");
 
@@ -63,7 +72,8 @@ namespace Asteroids.GameManager
             IPlayerInputObserver inputObserver = new PlayerInputObserver();
             
             _playerFactory.Create(prefab, movableData, inputObserver, gameSettings.PlayerRotationSpeed, 
-                gameSettings.ProjectilePrefab, gameSettings.ProjectileSpeed, _projectileFactory);
+                gameSettings.ProjectilePrefab, gameSettings.ProjectileSpeed, _projectileFactory, gameSettings.LaserActiveTimeDuration,
+                gameSettings.LaserChargesCapacity, gameSettings.LaserChargeCoolDown);
             
             /*bool isPrefab = true;
             var movable = _movableFactory.Create(

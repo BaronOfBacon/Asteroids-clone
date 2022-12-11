@@ -55,6 +55,15 @@ namespace Asteroids.Player
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LaserFire"",
+                    ""type"": ""Button"",
+                    ""id"": ""021ac62c-3e44-4596-ad74-29d7f9f7f016"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -105,11 +114,22 @@ namespace Asteroids.Player
                 {
                     ""name"": """",
                     ""id"": ""679f312a-fb9a-4e18-abf5-41ea01ff6aa3"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/enter"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eef96a7d-580e-46ce-9f5b-7d14e24179a4"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LaserFire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -123,6 +143,7 @@ namespace Asteroids.Player
             m_Player_Rotation = m_Player.FindAction("Rotation", throwIfNotFound: true);
             m_Player_Thrust = m_Player.FindAction("Thrust", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+            m_Player_LaserFire = m_Player.FindAction("LaserFire", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -185,6 +206,7 @@ namespace Asteroids.Player
         private readonly InputAction m_Player_Rotation;
         private readonly InputAction m_Player_Thrust;
         private readonly InputAction m_Player_Fire;
+        private readonly InputAction m_Player_LaserFire;
         public struct PlayerActions
         {
             private @InputActions m_Wrapper;
@@ -192,6 +214,7 @@ namespace Asteroids.Player
             public InputAction @Rotation => m_Wrapper.m_Player_Rotation;
             public InputAction @Thrust => m_Wrapper.m_Player_Thrust;
             public InputAction @Fire => m_Wrapper.m_Player_Fire;
+            public InputAction @LaserFire => m_Wrapper.m_Player_LaserFire;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -210,6 +233,9 @@ namespace Asteroids.Player
                     @Fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
                     @Fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
                     @Fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                    @LaserFire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaserFire;
+                    @LaserFire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaserFire;
+                    @LaserFire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaserFire;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -223,6 +249,9 @@ namespace Asteroids.Player
                     @Fire.started += instance.OnFire;
                     @Fire.performed += instance.OnFire;
                     @Fire.canceled += instance.OnFire;
+                    @LaserFire.started += instance.OnLaserFire;
+                    @LaserFire.performed += instance.OnLaserFire;
+                    @LaserFire.canceled += instance.OnLaserFire;
                 }
             }
         }
@@ -232,6 +261,7 @@ namespace Asteroids.Player
             void OnRotation(InputAction.CallbackContext context);
             void OnThrust(InputAction.CallbackContext context);
             void OnFire(InputAction.CallbackContext context);
+            void OnLaserFire(InputAction.CallbackContext context);
         }
     }
 }

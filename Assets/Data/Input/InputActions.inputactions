@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LaserFire",
+                    "type": "Button",
+                    "id": "021ac62c-3e44-4596-ad74-29d7f9f7f016",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -81,11 +90,22 @@
                 {
                     "name": "",
                     "id": "679f312a-fb9a-4e18-abf5-41ea01ff6aa3",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/enter",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eef96a7d-580e-46ce-9f5b-7d14e24179a4",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LaserFire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

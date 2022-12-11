@@ -10,7 +10,6 @@ namespace Asteroids.MovableSystem
     public class MovableSystemModel : Model
     {
         public EventHandler MovablesChanged;
-        public Vector2 fieldBoundariesDistance;
         public float forwardAccelerationMultiplier;
         public float maxSpeed;
         

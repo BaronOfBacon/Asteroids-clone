@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Asteroids.Helpers;
 using Asteroids.Movable;
 using Core;
 using UnityEngine;
@@ -16,9 +17,9 @@ namespace Asteroids.MovableSystem
             view.UpdateCalled += Update;
         }
 
-        public void Init()
+        public void Init(FieldCalculationHelper helper)
         {
-            _fieldCalculationHelper = new FieldCalculationHelper(model.fieldBoundariesDistance);
+            _fieldCalculationHelper = helper;
         }
         
         private void Update(object sender, EventArgs args)

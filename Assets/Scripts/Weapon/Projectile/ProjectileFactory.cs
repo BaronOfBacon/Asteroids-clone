@@ -25,12 +25,12 @@ namespace Asteroids.Weapon.Projectile
         {
             var movableData = new MovableData()
             {
-                position = (Vector2)args[0],
+                position = (Vector3)args[0],
                 accelerateForward = false,
                 acceleration = Vector2.zero,
                 friction = 0f,
                 mass = 1f,
-                velocity = (Vector2)args[1],
+                velocity = (Vector3)args[1],
                 destroyOutsideTheField = true
             };
             var projectileGO = GameObject.Instantiate(_prefab);

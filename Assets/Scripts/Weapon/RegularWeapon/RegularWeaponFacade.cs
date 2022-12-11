@@ -12,9 +12,9 @@ namespace Asteroids.RegularWeapon
             _regularWeaponPresenter = (RegularWeaponPresenter)presenter;
         }
 
-        public void TryShoot(Vector2 direction)
+        public void TryShoot()
         {
-            _regularWeaponPresenter.TryShoot(direction);
+            _regularWeaponPresenter.TryShoot();
         }
     }
 }

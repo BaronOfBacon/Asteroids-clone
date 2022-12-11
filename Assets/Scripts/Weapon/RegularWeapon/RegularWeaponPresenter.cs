@@ -12,14 +12,14 @@ namespace Asteroids.RegularWeapon
             
         }
         
-        public void TryShoot(Vector2 direction)
+        public void TryShoot()
         {
             var projectilePosition = view.transform.position +
                                      view.transform.rotation * model.ProjectileSpawnOffset;
 
-            var projectileVelocity = direction * model.ProjectileSpeed;
+            var projectileVelocity = view.transform.up * model.ProjectileSpeed;
             
-            var projectileFacade = model.ProjectileFactory.Create((Vector2)projectilePosition, projectileVelocity);
+            var projectileFacade = model.ProjectileFactory.Create(projectilePosition, projectileVelocity);
         }
     }
 }

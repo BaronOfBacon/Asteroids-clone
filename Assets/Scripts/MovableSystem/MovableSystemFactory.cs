@@ -1,3 +1,4 @@
+using Asteroids.Helpers;
 using Asteroids.Movable;
 using Core;
 using UnityEngine;
@@ -16,21 +17,19 @@ namespace Asteroids.MovableSystem
         /// <summary>
         /// Creates movable system entity.
         /// </summary>
-        /// <param name="args">[0] MovableSystemView, [1] Vector2 (Distance to boundaries of game field),
-        /// [2] float (Forward acceleration multiplier), [3] float (Max speed)</param>
+        /// <param name="args">[0] MovableSystemView, [1] float (Forward acceleration multiplier),
+        /// [2] float (Max speed), [3] FieldCalculationHelper</param>
         /// <returns>MovableSystemFacade</returns>
         public override MovableSystemFacade Create(params object[] args)
         {
             var model = new MovableSystemModel();
             var view = (MovableSystemView)args[0];
             var presenter = new MovableSystemPresenter(model, view);
-            var gameFieldSize = (Vector2)args[1];
-            
-            model.fieldBoundariesDistance = new Vector2(gameFieldSize.x / 2f, gameFieldSize.y / 2f);
-            model.forwardAccelerationMultiplier = (float)args[2];
-            model.maxSpeed = (float)args[3];
+
+            model.forwardAccelerationMultiplier = (float)args[1];
+            model.maxSpeed = (float)args[2];
                 
-            presenter.Init();
+            presenter.Init((FieldCalculationHelper)args[3]);
             
             var facade = new MovableSystemFacade(presenter);
             _movableEventsHolder.MovableCreated += facade.AddMovable;

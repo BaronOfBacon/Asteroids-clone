@@ -3,7 +3,7 @@ using System.Linq;
 using Tools;
 using UnityEngine;
 
-namespace Asteroids.MovableSystem
+namespace Asteroids.Helpers
 {
     public class FieldCalculationHelper
     {
@@ -34,7 +34,7 @@ namespace Asteroids.MovableSystem
             }
         }
 
-        public bool NewPositionInPortal(out Vector2 newPosition, Vector2 position, Vector2 direction)
+        public bool GetForwardIntersectionPosition(out Vector2 newPosition, Vector2 position, Vector2 direction)
         {
             newPosition = new Vector2();
             List<Vector3> _intersections = new List<Vector3>();
@@ -63,13 +63,22 @@ namespace Asteroids.MovableSystem
             while (_intersections.Any())
             {
                 var comparablePosition = _intersections[0];
-                _intersections.RemoveAt(0);
-                var newPositionDistance = Vector3.Distance(newPosition, position);
-                var comparablePositionDistance = Vector3.Distance(comparablePosition, position);
-                if (comparablePositionDistance < newPositionDistance)
+                var dotProduct = Vector3.Dot(direction, comparablePosition - (Vector3)position);
+                if (Mathf.Sign(dotProduct) == 1)
                 {
                     newPosition = comparablePosition;
                 }
+                _intersections.RemoveAt(0);
+            }
+
+            return true;
+        }
+        
+        public bool NewPositionInPortal(out Vector2 newPosition, Vector2 position, Vector2 direction)
+        {
+            if (!GetForwardIntersectionPosition(out newPosition, position, direction))
+            {
+                return false;
             }
             
             if (Mathf.Abs(newPosition.x) >= _fieldBoundariesDistance.x)
@@ -82,8 +91,9 @@ namespace Asteroids.MovableSystem
 
         public bool IsInsideOfBoundaries(Vector2 position)
         {
-            return Mathf.Abs(position.x) <= _fieldBoundariesDistance.x &&
-                   Mathf.Abs(position.y) <= _fieldBoundariesDistance.y;
+            var precisionDelta = 0.01f;
+            return Mathf.Abs(position.x) <= _fieldBoundariesDistance.x + precisionDelta &&
+                   Mathf.Abs(position.y) <= _fieldBoundariesDistance.y + precisionDelta;
         }
 
         private struct RectVertex

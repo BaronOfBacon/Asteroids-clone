@@ -6,7 +6,7 @@ namespace Asteroids.Player
     public class PlayerInputObserver: IPlayerInputObserver
     {
         public EventHandler<bool> ThrustInputDetected { get; set; }
-        public EventHandler FireInputDetected { get; set; }
+        public EventHandler RegularFireInputDetected { get; set; }
         public EventHandler LaserFireInputDetected { get; set; }
         public float RotationInputValue => _inputActions.Player.Rotation.ReadValue<float>();
 
@@ -20,6 +20,7 @@ namespace Asteroids.Player
             _inputActions.Player.Thrust.started += HandleThrustInput;
             _inputActions.Player.Thrust.canceled += HandleThrustInput;
             _inputActions.Player.Fire.started += HandleFireInput;
+            _inputActions.Player.LaserFire.started += HandleLaserFireInput;
         }
 
         ~PlayerInputObserver()
@@ -27,6 +28,7 @@ namespace Asteroids.Player
             _inputActions.Player.Thrust.started -= HandleThrustInput;
             _inputActions.Player.Thrust.canceled -= HandleThrustInput;
             _inputActions.Player.Fire.started -= HandleFireInput;
+            _inputActions.Player.LaserFire.started -= HandleLaserFireInput;
         }
 
         private void HandleThrustInput(InputAction.CallbackContext context)
@@ -40,12 +42,12 @@ namespace Asteroids.Player
         
         private void HandleFireInput(InputAction.CallbackContext context)
         {
-            FireInputDetected?.Invoke(this, null);
+            RegularFireInputDetected?.Invoke(this, null);
         }
         
         private void HandleLaserFireInput(InputAction.CallbackContext context)
         {
-            throw new NotImplementedException();
+            LaserFireInputDetected?.Invoke(this, null);
         }
         
     }
