@@ -2,8 +2,9 @@
     "name": "Projectile",
     "rootNamespace": "Asteroids.Weapon.Projectile",
     "references": [
-        "GUID:f049d048a5f9f45d98ef1a2e2e983711",
-        "GUID:2749ffbd14e61437aa73c1d079f19f5b"
+        "GUID:2749ffbd14e61437aa73c1d079f19f5b",
+        "GUID:b03c74413b4eb4dc9bcc1d1ee60fa379",
+        "GUID:e5ba601e97d5c4b79a373ddf5bc87c0f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
