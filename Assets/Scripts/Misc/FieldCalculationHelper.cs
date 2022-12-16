@@ -34,10 +34,9 @@ namespace Asteroids.Helpers
             }
         }
 
-        public bool GetForwardIntersectionPosition(out Vector2 newPosition, Vector2 position, Vector2 direction)
+        public bool GetIntersections(out List<Vector3> intersections,  Vector2 position, Vector2 direction)
         {
-            newPosition = new Vector2();
-            List<Vector3> _intersections = new List<Vector3>();
+            intersections = new List<Vector3>();
             
             foreach (var vertex in _vertices)
             {
@@ -48,27 +47,63 @@ namespace Asteroids.Helpers
                 {
                     if (IsInsideOfBoundaries(intersection))
                     {
-                        _intersections.Add(intersection);
+                        intersections.Add(intersection);
                     }
                 }
             }
             
-            if (!_intersections.Any())
+            return intersections.Any();
+        }
+        
+        public bool GetClosestIntersectionPosition(out Vector2 newPosition, Vector2 position, Vector2 direction)
+        {
+            newPosition = new Vector2();
+            
+            if (!GetIntersections(out var intersections, position, direction))
             {
                 return false;
             }
             
-            newPosition = _intersections[0];
-            _intersections.RemoveAt(0);
-            while (_intersections.Any())
+            newPosition = intersections[0];
+            var minDistance = Vector3.Distance(newPosition, position);
+            intersections.RemoveAt(0);
+            while (intersections.Any())
             {
-                var comparablePosition = _intersections[0];
+                var comparablePosition = intersections[0];
+                
+                var distance = Vector3.Distance(comparablePosition, position);
+                
+                if(distance < minDistance)
+                {
+                    newPosition = comparablePosition;
+                    minDistance = distance;
+                }
+                intersections.RemoveAt(0);
+            }
+
+            return true;
+        }
+        
+        public bool GetForwardIntersectionPosition(out Vector2 newPosition, Vector2 position, Vector2 direction)
+        {
+            newPosition = new Vector2();
+
+            if (!GetIntersections(out var intersections, position, direction))
+            {
+                return false;
+            }
+            
+            newPosition = intersections[0];
+            intersections.RemoveAt(0);
+            while (intersections.Any())
+            {
+                var comparablePosition = intersections[0];
                 var dotProduct = Vector3.Dot(direction, comparablePosition - (Vector3)position);
                 if (Mathf.Sign(dotProduct) == 1)
                 {
                     newPosition = comparablePosition;
                 }
-                _intersections.RemoveAt(0);
+                intersections.RemoveAt(0);
             }
 
             return true;
@@ -76,16 +111,16 @@ namespace Asteroids.Helpers
         
         public bool NewPositionInPortal(out Vector2 newPosition, Vector2 position, Vector2 direction)
         {
-            if (!GetForwardIntersectionPosition(out newPosition, position, direction))
+            if (!GetClosestIntersectionPosition(out newPosition, position, direction))
             {
                 return false;
             }
-            
-            if (Mathf.Abs(newPosition.x) >= _fieldBoundariesDistance.x)
-                newPosition.x = -newPosition.x - Mathf.Sign(newPosition.x) * Time.deltaTime;
-            if (Mathf.Abs(newPosition.y) >= _fieldBoundariesDistance.y)
-                newPosition.y = -newPosition.y - Mathf.Sign(newPosition.y) * Time.deltaTime;
 
+            if (Mathf.Abs(newPosition.x) >= _fieldBoundariesDistance.x)
+                newPosition.x = -newPosition.x;
+            if (Mathf.Abs(newPosition.y) >= _fieldBoundariesDistance.y)
+                newPosition.y = -newPosition.y;
+            
             return true;
         }
 
@@ -96,6 +131,13 @@ namespace Asteroids.Helpers
                    Mathf.Abs(position.y) <= _fieldBoundariesDistance.y + precisionDelta;
         }
 
+        public Vector2 GetRandomPointFromInside()
+        {
+            var x = Random.Range(-_fieldBoundariesDistance.x, _fieldBoundariesDistance.x);
+            var y = Random.Range(-_fieldBoundariesDistance.y, _fieldBoundariesDistance.y);
+            return new Vector2(x, y);
+        }
+        
         private struct RectVertex
         {
             public Vector2 Position;
