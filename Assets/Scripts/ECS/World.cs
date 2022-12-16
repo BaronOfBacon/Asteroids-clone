@@ -90,7 +90,7 @@ namespace ECS
                 
                 foreach (var entity in pair.Value)
                 {
-                    if (!entity.ValidForMask(componentsMask))
+                    if (componentsMask != null && !entity.ValidForMask(componentsMask))
                     {
                         invalidEntitiesStack.Push(entity);
                     }
@@ -107,7 +107,7 @@ namespace ECS
                 {
                     if (pair.Value.Contains(entity)) continue;
 
-                    if (entity.ValidForMask(componentsMask))
+                    if (componentsMask != null && entity.ValidForMask(componentsMask))
                     {
                         pair.Value.Add(entity);
                     }

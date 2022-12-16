@@ -20,9 +20,9 @@ namespace Asteroids.Asteroid
 
         private List<Type> emptyList = new List<Type>();
 
-        private bool _isEnabled;
+        private bool _enabled;
         private bool _isFirstStart = true;
-        private List<AsteroidComponent> _asteroids = new List<AsteroidComponent>();
+        private Dictionary<AsteroidComponent, Entity> _asteroids = new Dictionary<AsteroidComponent, Entity>();
         private Collider2D[] _buffer;
         private float _newAsteroidSpawnTimeLeft;
         
@@ -57,6 +57,9 @@ namespace Asteroids.Asteroid
             base.Initialize(world, messageDispatcher);
             MessageDispatcher.Subscribe(MessageType.SpawnAsteroidFragments, SpawnAsteroidFractions);
             MessageDispatcher.Subscribe(MessageType.AsteroidKilled, HandleAsteroidDestroyed);
+            
+            MessageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDeath);
+            MessageDispatcher.Subscribe(MessageType.RestartGame, Restart);
         }
 
         public override void Process(Entity entity)
@@ -66,7 +69,7 @@ namespace Asteroids.Asteroid
         public override void PostProcess()
         {
             
-            if (_asteroids.Count(asteroid => !asteroid.IsFraction) < _asteroidsInitSpawnAmount)
+            if (_asteroids.Count(asteroid => !asteroid.Key.IsFraction) < _asteroidsInitSpawnAmount)
             {
                 if (_newAsteroidSpawnTimeLeft <= 0)
                 {
@@ -80,7 +83,7 @@ namespace Asteroids.Asteroid
 
         public void Start()
         {
-            if (_isEnabled) return;
+            if (_enabled) return;
             if (_isFirstStart)
             {
                 for (var i = 0; i < _asteroidsInitSpawnAmount; i++)
@@ -89,7 +92,7 @@ namespace Asteroids.Asteroid
                 }
             }
             
-            _isEnabled = true;
+            _enabled = true;
         }
 
         private void SpawnAsteroidRandomly()
@@ -114,13 +117,6 @@ namespace Asteroids.Asteroid
             SpawnAsteroid(movableData, _asteroidPrefab, false);
         }
 
-        public void Stop()
-        {
-            if (!_isEnabled) return;
-            
-            _isEnabled = false;
-        }
-        
         public void SpawnAsteroid(MovableData movableData, GameObject prefab, bool isFraction)
         {
             var asteroidGO = GameObject.Instantiate(prefab,
@@ -136,7 +132,7 @@ namespace Asteroids.Asteroid
                 (CollisionDetectorComponent)asteroid.AddComponent(new CollisionDetectorComponent());
             collisionDetectorComponent.SubscribeDetector(collisionDetector);
             
-            _asteroids.Add(asteroidComponent);
+            _asteroids.Add(asteroidComponent, asteroid);
         }
 
         private void SpawnAsteroidFractions(object positionObj)
@@ -176,11 +172,11 @@ namespace Asteroids.Asteroid
 
         private void HandleAsteroidDestroyed(object asteroid)
         {
-            if (!_isEnabled) return;
+            if (!_enabled) return;
 
             var asteroidComponent = (AsteroidComponent)asteroid;
             
-            if (_asteroids.Count(asteroid => !asteroid.IsFraction) == _asteroidsInitSpawnAmount - 1)
+            if (_asteroids.Count(asteroid => !asteroid.Key.IsFraction) == _asteroidsInitSpawnAmount - 1)
                 _newAsteroidSpawnTimeLeft = _newAsteroidSpawnCoolDown;
             
             _asteroids.Remove(asteroidComponent);
@@ -196,10 +192,36 @@ namespace Asteroids.Asteroid
 
             return position;
         }
+
+        private void HandlePlayerDeath(object arg)
+        {
+            _enabled = false;
+            while (_asteroids.Any())
+            {
+                var asteroid = _asteroids.First();
+                _asteroids.Remove(asteroid.Key);
+                asteroid.Value.InitDestroy();
+            }
+        }
+        
+        private void Restart(object arg)
+        {
+            _enabled = true;
+            
+            _newAsteroidSpawnTimeLeft = _newAsteroidSpawnCoolDown;
+            
+            for (var i = 0; i < _asteroidsInitSpawnAmount; i++)
+            {
+                SpawnAsteroidRandomly();
+            }
+        }
+        
         public override void Destroy()
         {
             MessageDispatcher.Unsubscribe(MessageType.SpawnAsteroidFragments, SpawnAsteroidFractions);
             MessageDispatcher.Unsubscribe(MessageType.AsteroidKilled, HandleAsteroidDestroyed);
+            MessageDispatcher.Unsubscribe(MessageType.PlayerDied, HandlePlayerDeath);
+            MessageDispatcher.Unsubscribe(MessageType.RestartGame, Restart);
         }
     }
 }

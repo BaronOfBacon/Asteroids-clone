@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using Asteroids.Input;
 using Asteroids.Movable;
 using ECS;
+using ECS.Messages;
 using UnityEngine;
 
 namespace Asteroids.Player
 {
     public class PlayerMoveSystem : ECS.System
     {
-        public override IEnumerable<Type> ComponentsMask => new List<Type>()
+        public override IEnumerable<Type> ComponentsMask => _componentsMask;
+        
+        private IEnumerable<Type> _componentsMask = new List<Type>()
         {
             typeof(PlayerInputComponent),
             typeof(MovableComponent),
@@ -21,6 +24,7 @@ namespace Asteroids.Player
         {
             _rotationSpeed = rotationSpeed;
         }
+
         public override void Process(Entity entity)
         {
            var movableComponent = entity.GetComponent<MovableComponent>();
@@ -39,7 +43,6 @@ namespace Asteroids.Player
 
         public override void Destroy()
         {
-           
         }
     }
 }

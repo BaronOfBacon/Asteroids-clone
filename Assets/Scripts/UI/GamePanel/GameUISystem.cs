@@ -12,55 +12,59 @@ namespace Asteroids.UI.Game
         
         private IEnumerable<Type> _componentsMask;
 
-        private Vector2 position;
-        private float angle;
-        private Vector2 velocity;
-        private int charges;
-        private float cooldown;
-
-        public GameUISystem()
+        private GameUIPanelView _gameUIPanel;
+        private Vector2 _position;
+        private float _angle;
+        private Vector2 _velocity;
+        private int _charges;
+        private float _cooldown;
+        private bool _hidden;
+        
+        public GameUISystem(GameUIPanelView panel)
         {
             _componentsMask = new List<Type>()
             {
                 typeof(GameUIComponent)
             };
+            _gameUIPanel = panel;
         }
 
         public override void Initialize(World world, Dispatcher messageDispatcher)
         {
             base.Initialize(world, messageDispatcher);
-            MessageDispatcher.Subscribe(MessageType.PlayerSpatialDataChanged, HandleSpatialDataChange);
-            MessageDispatcher.Subscribe(MessageType.LaserDataChanged, HandleLaserDataChange);
+            SubscribeDataListening();
+            MessageDispatcher.Subscribe(MessageType.PlayerDied, HidePanel);
+            MessageDispatcher.Subscribe(MessageType.RestartGame, ShowPanel);
         }
 
         public override void Process(Entity entity)
         {
             var component = entity.GetComponent<GameUIComponent>();
             
-            if (component.Position != position)
+            if (component.Position != _position)
             {
-                component.Position = position;
-                component.Panel.UpdateCoordinates(position);
+                component.Position = _position;
+                _gameUIPanel.UpdateCoordinates(_position);
             }
-            if (component.Angle != angle)
+            if (component.Angle != _angle)
             {
-                component.Angle = angle;
-                component.Panel.UpdateAngle(angle);
+                component.Angle = _angle;
+                _gameUIPanel.UpdateAngle(_angle);
             }
-            if (component.Velocity != velocity)
+            if (component.Velocity != _velocity)
             {
-                component.Velocity = velocity;
-                component.Panel.UpdateSpeed(velocity);
+                component.Velocity = _velocity;
+                _gameUIPanel.UpdateSpeed(_velocity);
             }
-            if (component.Charges != charges)
+            if (component.Charges != _charges)
             {
-                component.Charges = charges;
-                component.Panel.UpdateLaserCharges(charges);
+                component.Charges = _charges;
+                _gameUIPanel.UpdateLaserCharges(_charges);
             }
-            if (component.Cooldown != cooldown)
+            if (component.Cooldown != _cooldown)
             {
-                component.Cooldown = cooldown;
-                component.Panel.UpdateLaserChargesCooldown(cooldown);
+                component.Cooldown = _cooldown;
+                _gameUIPanel.UpdateLaserChargesCooldown(_cooldown);
             }
         }
 
@@ -71,22 +75,49 @@ namespace Asteroids.UI.Game
         private void HandleSpatialDataChange(object spatialData)
         {
             var data = (Tuple<Vector2, float, Vector2>)spatialData;
-            position = data.Item1;
-            angle = data.Item2;
-            velocity = data.Item3;
+            _position = data.Item1;
+            _angle = data.Item2;
+            _velocity = data.Item3;
         }
         
         private void HandleLaserDataChange(object laserData)
         {
            var data = (Tuple<int, float>)laserData;
-           charges = data.Item1;
-           cooldown = data.Item2;
+           _charges = data.Item1;
+           _cooldown = data.Item2;
+        }
+        
+        private void HidePanel(object arg)
+        {
+            _hidden = true;
+            _gameUIPanel.gameObject.SetActive(false);
+            UnsubscribeDataListening();
+        }
+        
+        private void ShowPanel(object arg)
+        {
+            _hidden = false;
+            _gameUIPanel.gameObject.SetActive(true);
+            SubscribeDataListening();
+        }
+
+        private void SubscribeDataListening()
+        {
+            MessageDispatcher.Subscribe(MessageType.PlayerSpatialDataChanged, HandleSpatialDataChange);
+            MessageDispatcher.Subscribe(MessageType.LaserDataChanged, HandleLaserDataChange);
+        }
+        
+        private void UnsubscribeDataListening()
+        {
+            MessageDispatcher.Unsubscribe(MessageType.PlayerSpatialDataChanged, HandleSpatialDataChange);
+            MessageDispatcher.Unsubscribe(MessageType.LaserDataChanged, HandleLaserDataChange);
         }
         
         public override void Destroy()
         {
-            MessageDispatcher.Unsubscribe(MessageType.PlayerSpatialDataChanged, HandleSpatialDataChange);
-            MessageDispatcher.Subscribe(MessageType.PlayerSpatialDataChanged, HandleSpatialDataChange);
+            UnsubscribeDataListening();
+            MessageDispatcher.Unsubscribe(MessageType.PlayerDied, HidePanel);
+            MessageDispatcher.Unsubscribe(MessageType.RestartGame, ShowPanel);
         }
     }
 }

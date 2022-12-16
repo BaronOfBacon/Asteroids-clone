@@ -29,16 +29,20 @@ namespace Asteroids.GameManager
 
         [SerializeField] 
         private GameUIPanelView _gameUIPanel;
+        [SerializeField] 
+        private EndGamePanelView _endGameUIPanel;
         
         private World _world;
         private InputActions _inputActions;
         private AsteroidsSpawnSystem _asteroidsSpawnSystem;
-
+        private Dispatcher _messageDispatcher;
+        private Entity _player;
+        
         private void Awake()
         {
-            Dispatcher messageDispatcher = new Dispatcher();
+            _messageDispatcher = new Dispatcher();
             
-            _world = new World(messageDispatcher);
+            _world = new World(_messageDispatcher);
 
             _inputActions = new InputActions();
 
@@ -58,8 +62,12 @@ namespace Asteroids.GameManager
             _world.AddSystem(_asteroidsSpawnSystem);
             _world.AddSystem(new ScoreSystem(_scoreSettings));
             _world.AddSystem(new PlayerSpatialDataNotifierSystem());
-            _world.AddSystem(new GameUISystem());
+            _world.AddSystem(new GameUISystem(_gameUIPanel));
             _world.AddSystem(new PlayerLaserUIDataNotifierSystem());
+            _world.AddSystem(new EndGameUISystem(_endGameUIPanel));
+
+            _messageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDeath);
+            _messageDispatcher.Subscribe(MessageType.RestartGame, Restart);
         }
 
         private void Start()
@@ -69,13 +77,13 @@ namespace Asteroids.GameManager
             var score = _world.CreateEntity(null);
             score.AddComponent<ScoreComponent>();
             var gamePanelEntity = _world.CreateEntity(_gameUIPanel.gameObject);
-            gamePanelEntity.AddComponent(new GameUIComponent(_gameUIPanel));
+            gamePanelEntity.AddComponent(new GameUIComponent());
         }
 
         private void InitPlayer()
         {
             var playerGO = GameObject.Instantiate(_gameSettings.PlayerPrefab);
-            var player = _world.CreateEntity(playerGO);
+            _player = _world.CreateEntity(playerGO);
             var playerMovableInitData = new MovableData()
             {
                 acceleration = Vector2.zero,
@@ -84,18 +92,18 @@ namespace Asteroids.GameManager
                 velocity = Vector2.zero,
                 friction = _gameSettings.PlayerFriction
             };
-            player.AddComponent<PlayerComponent>();
-            player.AddComponent(new MovableComponent(playerMovableInitData));
-            player.AddComponent(new PlayerInputComponent());
-            player.AddComponent(new RegularWeaponComponent(_gameSettings.ProjectilePrefab,
+            _player.AddComponent<PlayerComponent>();
+            _player.AddComponent(new MovableComponent(playerMovableInitData));
+            _player.AddComponent(new PlayerInputComponent());
+            _player.AddComponent(new RegularWeaponComponent(_gameSettings.ProjectilePrefab,
                 _gameSettings.ProjectileSpeed, _gameSettings.ProjectileSpawnOffset));
 
             var laserView = playerGO.GetComponent<LaserWeaponView>();
-            player.AddComponent(new LaserWeaponComponent(laserView, _gameSettings.LaserActiveTimeDuration,
+            _player.AddComponent(new LaserWeaponComponent(laserView, _gameSettings.LaserActiveTimeDuration,
                 _gameSettings.LaserChargesCapacity, _gameSettings.LaserChargeCooldown));
 
             var collisionDetector = playerGO.GetComponent<CollisionDetector2D>();
-            var collisionDetectorComponent = (CollisionDetectorComponent)player.AddComponent(new CollisionDetectorComponent());
+            var collisionDetectorComponent = (CollisionDetectorComponent)_player.AddComponent(new CollisionDetectorComponent());
             collisionDetectorComponent.SubscribeDetector(collisionDetector);
         }
 
@@ -108,9 +116,21 @@ namespace Asteroids.GameManager
         {
             _world.LateUpdate();
         }
+        
+        private void HandlePlayerDeath(object arg)
+        {
+            _player.InitDestroy();
+        }
+        
+        private void Restart(object arg)
+        {
+            InitPlayer();
+        }
 
         private void OnDestroy()
         {
+            _messageDispatcher.Unsubscribe(MessageType.PlayerDied, HandlePlayerDeath);
+            _messageDispatcher.Subscribe(MessageType.RestartGame, Restart);
             _world.Destroy();
         }
     }

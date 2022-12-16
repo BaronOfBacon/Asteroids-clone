@@ -30,7 +30,6 @@ namespace Asteroids.Player
             if (collisionDetector.CollidingObjects.Any())
             {
                 MessageDispatcher.SendMessage(MessageType.PlayerDied, null);
-                Debug.Log("Player died");
             }
         }
 

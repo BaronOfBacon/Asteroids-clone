@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Asteroids.Asteroid;
 using ECS;
 using ECS.Messages;
-using UnityEngine;
 
 namespace Asteroids.Score
 {
@@ -26,15 +25,11 @@ namespace Asteroids.Score
             _settings = settings;
         }
 
-        public void Reset()
-        {
-            _score = 0;
-        }
-        
         public override void Initialize(World world, Dispatcher messageDispatcher)
         {
             base.Initialize(world, messageDispatcher);
             MessageDispatcher.Subscribe(MessageType.AsteroidKilled, HandleAsteroidKilled);
+            MessageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDied);
         }
 
         public override void Process(Entity entity)
@@ -53,12 +48,18 @@ namespace Asteroids.Score
             var pointForKill = asteroidComponent.IsFraction ? _settings.AsteroidFractionKillPoints : 
                 _settings.AsteroidKillPoints;
             _score += pointForKill;
-            Debug.Log(_score);
         }
         
+        private void HandlePlayerDied(object arg)
+        {
+            MessageDispatcher.SendMessage(MessageType.BestScore, _score);
+            _score = 0;
+        }
+
         public override void Destroy()
         {
             MessageDispatcher.Unsubscribe(MessageType.AsteroidKilled, HandleAsteroidKilled);
+            MessageDispatcher.Unsubscribe(MessageType.PlayerDied, HandlePlayerDied);
         }
     }
 }

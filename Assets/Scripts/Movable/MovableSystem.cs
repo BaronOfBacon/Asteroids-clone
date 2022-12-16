@@ -2,22 +2,25 @@ using System;
 using System.Collections.Generic;
 using Asteroids.Helpers;
 using ECS;
+using ECS.Messages;
 using UnityEngine;
 
 namespace Asteroids.Movable
 {
     public class MovableSystem : ECS.System
     {
-        public override IEnumerable<Type> ComponentsMask =>
-            new List<Type>()
-            {
-                typeof(MovableComponent)
-            };
+        public override IEnumerable<Type> ComponentsMask => _componentsMask;
+
+        private IEnumerable<Type> _componentsMask = new List<Type>()
+        {
+            typeof(MovableComponent)
+        };
 
         private float _forwardAccelerationMultiplier;
         private float _maxSpeed;
         private FieldCalculationHelper _fieldCalculationHelper;
-
+        private bool _paused;
+        
         public MovableSystem(float forwardAccelerationMultiplier, float maxSpeed
             , FieldCalculationHelper fieldCalculationHelper)
         {
@@ -25,9 +28,18 @@ namespace Asteroids.Movable
             _maxSpeed = maxSpeed;
             _fieldCalculationHelper = fieldCalculationHelper;
         }
-        
+
+        public override void Initialize(World world, Dispatcher messageDispatcher)
+        {
+            base.Initialize(world, messageDispatcher);
+            MessageDispatcher.Subscribe(MessageType.PlayerDied, Pause);
+            MessageDispatcher.Subscribe(MessageType.RestartGame, Unpause);
+        }
+
         public override void Process(Entity entity)
         {
+            if (_paused) return;
+            
             MovableComponent movableComponent = entity.GetComponent<MovableComponent>();
 
             entity.GameObject.transform.rotation = movableComponent.Rotation;
@@ -82,9 +94,20 @@ namespace Asteroids.Movable
         {
         }
 
+        private void Pause(object arg)
+        {
+            _paused = true;
+        }
+        private void Unpause(object arg)
+        {
+            _paused = false;
+        }
+        
+        
         public override void Destroy()
         {
-            
+            MessageDispatcher.Unsubscribe(MessageType.PlayerDied, Pause);
+            MessageDispatcher.Unsubscribe(MessageType.RestartGame, Unpause);
         }
     }
 }
