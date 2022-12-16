@@ -2,7 +2,9 @@
     "name": "Movable",
     "rootNamespace": "Asteroids.Movable",
     "references": [
-        "GUID:f049d048a5f9f45d98ef1a2e2e983711"
+        "GUID:b03c74413b4eb4dc9bcc1d1ee60fa379",
+        "GUID:2e13b75d1ba1946658cab19954ab6957",
+        "GUID:c86e4bb4827ed48e3b2f322b94ee3c08"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

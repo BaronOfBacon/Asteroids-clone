@@ -1,12 +1,12 @@
-using Core;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Asteroids.Movable
 {
-    public class MovableModel : Model
+    public class MovableComponent : ECS.Component
     {
         public MovableData Data => _data;
-        public float Mass => _data.mass;
         public Vector2 Position
         {
             get => _data.position;
@@ -45,7 +45,7 @@ namespace Asteroids.Movable
 
         private MovableData _data;
 
-        public MovableModel(MovableData data)
+        public MovableComponent(MovableData data)
         {
             _data = data;
         }
