@@ -2,8 +2,8 @@
     "name": "LaserWeapon",
     "rootNamespace": "Asteroids.Weapon.LaserWeapon",
     "references": [
-        "GUID:c86e4bb4827ed48e3b2f322b94ee3c08",
         "GUID:b03c74413b4eb4dc9bcc1d1ee60fa379",
+        "GUID:c86e4bb4827ed48e3b2f322b94ee3c08",
         "GUID:bc1008cca8cec4684814e5f0876f5a0e",
         "GUID:2749ffbd14e61437aa73c1d079f19f5b"
     ],

@@ -1,3 +1,4 @@
+using System;
 using Asteroids.Asteroid;
 using Asteroids.Collisions;
 using Asteroids.Helpers;
@@ -10,6 +11,7 @@ using Asteroids.Weapon.Projectile;
 using Asteroids.Weapon.RegularWeapon;
 using Data;
 using ECS;
+using ECS.Messages;
 using UnityEngine;
 
 namespace Asteroids.GameManager
@@ -21,10 +23,13 @@ namespace Asteroids.GameManager
         
         private World _world;
         private InputActions _inputActions;
+        private AsteroidsSpawnSystem _asteroidsSpawnSystem;
 
         private void Awake()
         {
-            _world = new World();
+            Dispatcher messageDispatcher = new Dispatcher();
+            
+            _world = new World(messageDispatcher);
 
             _inputActions = new InputActions();
 
@@ -40,12 +45,19 @@ namespace Asteroids.GameManager
             _world.AddSystem(new PlayerDeathDetectorSystem());
             _world.AddSystem(new ProjectileOnCollisionDestroySystem());
             _world.AddSystem(new AsteroidOnCollisionDestroySystem());
+            _asteroidsSpawnSystem = new AsteroidsSpawnSystem(_gameSettings.AsteroidPrefab,
+                _gameSettings.AsteroidFragmentPrefab,
+                _gameSettings.AsteroidsSpawnAmount, _gameSettings.AsteroidFragmentsSpawnAmount,
+                _gameSettings.AsteroidVelocityRange, _gameSettings.AsteroidFragmentVelocityRange, 
+                _gameSettings.AsteroidFragmentRandomAngleRange, fieldCalculationHelper, 
+                _gameSettings.NewAsteroidSpawnCooldown);
+            _world.AddSystem(_asteroidsSpawnSystem);
         }
 
         private void Start()
         {
             InitPlayer();
-            InitTestAsteroid();
+            _asteroidsSpawnSystem.Start();
         }
 
         private void InitPlayer()
@@ -68,11 +80,11 @@ namespace Asteroids.GameManager
 
             var laserView = playerGO.GetComponent<LaserWeaponView>();
             player.AddComponent(new LaserWeaponComponent(laserView, _gameSettings.LaserActiveTimeDuration,
-                _gameSettings.LaserChargesCapacity, _gameSettings.LaserChargeCoolDown));
+                _gameSettings.LaserChargesCapacity, _gameSettings.LaserChargeCooldown));
 
-            var triggerDetector = playerGO.GetComponent<TriggerDetector2D>();
-            var triggerComponent = (TriggerDetectorComponent)player.AddComponent(new TriggerDetectorComponent());
-            triggerComponent.SubscribeDetector(triggerDetector);
+            var collisionDetector = playerGO.GetComponent<CollisionDetector2D>();
+            var collisionDetectorComponent = (CollisionDetectorComponent)player.AddComponent(new CollisionDetectorComponent());
+            collisionDetectorComponent.SubscribeDetector(collisionDetector);
         }
 
         private void InitTestAsteroid()
@@ -82,25 +94,21 @@ namespace Asteroids.GameManager
                 acceleration = Vector2.zero,
                 position = new Vector2(-3f,0f),
                 rotation = Quaternion.FromToRotation(Vector3.up, new Vector2(-0.3f, 0.7f)),
-                velocity = Vector2.zero,
-                friction = _gameSettings.PlayerFriction
+                velocity = Vector2.up * 2f,
+                friction = 0f
             };
-            
-            var asteroidGO = GameObject.Instantiate(_gameSettings.AsteroidPrefab, 
-                movableInitData.position, movableInitData.rotation);
-            var asteroid = _world.CreateEntity(asteroidGO);
-            asteroid.AddComponent<AsteroidComponent>();
-            
-            asteroid.AddComponent(new MovableComponent(movableInitData));
 
-            var triggerDetector = asteroidGO.GetComponent<TriggerDetector2D>();
-            var triggerDetectorComponent = (TriggerDetectorComponent)asteroid.AddComponent(new TriggerDetectorComponent());
-            triggerDetectorComponent.SubscribeDetector(triggerDetector);
+            _asteroidsSpawnSystem.SpawnAsteroid(movableInitData, _gameSettings.AsteroidPrefab, false);
         }
         
         private void Update()
         {
-            _world.Update();
+            _world.Process();
+        }
+
+        private void LateUpdate()
+        {
+            _world.LateUpdate();
         }
 
         private void OnDestroy()

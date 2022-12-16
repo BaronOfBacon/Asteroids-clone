@@ -19,14 +19,14 @@ namespace Asteroids.Player
             _componentsMask = new List<Type>()
             {
                 typeof(PlayerComponent),
-                typeof(TriggerDetectorComponent)
+                typeof(CollisionDetectorComponent)
             };
         }
         
         public override void Process(Entity entity)
         {
-            var triggerDetector = entity.GetComponent<TriggerDetectorComponent>();
-            if (triggerDetector.CollidingObjects.Any())
+            var collisionDetector = entity.GetComponent<CollisionDetectorComponent>();
+            if (collisionDetector.CollidingObjects.Any())
             {
                 Debug.Log("Player died");
             }

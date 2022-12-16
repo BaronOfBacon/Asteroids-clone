@@ -16,13 +16,13 @@ namespace Asteroids.Weapon.Projectile
         {
             _componentsMask = new List<Type>{
                 typeof(ProjectileComponent),
-                typeof(TriggerDetectorComponent)
+                typeof(CollisionDetectorComponent)
             };
         }
         
         public override void Process(Entity entity)
         {
-            var triggerDetector = entity.GetComponent<TriggerDetectorComponent>();
+            var triggerDetector = entity.GetComponent<CollisionDetectorComponent>();
             if (triggerDetector.CollidingObjects.Count > 0) 
                 entity.InitDestroy();
         }

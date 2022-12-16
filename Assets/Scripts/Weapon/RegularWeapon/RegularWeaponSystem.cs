@@ -46,9 +46,9 @@ namespace Asteroids.Weapon.RegularWeapon
             var projectileEntity = _world.CreateEntity(projectileGO);
             
             projectileEntity.AddComponent(new MovableComponent(movableData));
-            var triggerDetector2D = projectileGO.GetComponent<TriggerDetector2D>();
-            var triggerDetectorComponent = (TriggerDetectorComponent) projectileEntity.AddComponent(new TriggerDetectorComponent());
-            triggerDetectorComponent.SubscribeDetector(triggerDetector2D);
+            var collisionDetector = projectileGO.GetComponent<CollisionDetector2D>();
+            var collisionDetectorComponent = (CollisionDetectorComponent) projectileEntity.AddComponent(new CollisionDetectorComponent());
+            collisionDetectorComponent.SubscribeDetector(collisionDetector);
             projectileEntity.AddComponent(new ProjectileComponent());
         }
 

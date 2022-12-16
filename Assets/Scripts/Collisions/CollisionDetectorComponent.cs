@@ -4,13 +4,13 @@ using Component = ECS.Component;
 
 namespace Asteroids.Collisions
 {
-    public class TriggerDetectorComponent : Component
+    public class CollisionDetectorComponent : Component
     {
         public IReadOnlyList<GameObject> CollidingObjects => _collidingObjects;
         
         private List<GameObject> _collidingObjects = new List<GameObject>();
 
-        private void OnTriggerEnter2D(object sender, Collider2D collider)
+        private void OnCollisionEnter2D(object sender, Collider2D collider)
         {
             if (_collidingObjects.Contains(collider.gameObject))
                 return;
@@ -18,23 +18,23 @@ namespace Asteroids.Collisions
             _collidingObjects.Add(collider.gameObject);
         }
 
-        private void OnTriggerExit2D(object sender, Collider2D collider)
+        private void OnCollisionExit2D(object sender, Collider2D collider)
         {
             if (!_collidingObjects.Contains(collider.gameObject))
                 return;
             _collidingObjects.Remove(collider.gameObject);
         }
 
-        public void SubscribeDetector(TriggerDetector2D detector2D)
+        public void SubscribeDetector(CollisionDetector2D detector2D)
         {
-            detector2D.TriggerEnter2D += OnTriggerEnter2D;
-            detector2D.TriggerExit2D += OnTriggerExit2D;
+            detector2D.CollisionEnter2D += OnCollisionEnter2D;
+            detector2D.CollisionExit2D += OnCollisionExit2D;
         }
 
-        public void UnsubscribeDetector(TriggerDetector2D detector2D)
+        public void UnsubscribeDetector(CollisionDetector2D detector2D)
         {
-            detector2D.TriggerEnter2D -= OnTriggerEnter2D;
-            detector2D.TriggerExit2D -= OnTriggerExit2D;
+            detector2D.CollisionEnter2D -= OnCollisionEnter2D;
+            detector2D.CollisionExit2D -= OnCollisionExit2D;
         }
         
     }

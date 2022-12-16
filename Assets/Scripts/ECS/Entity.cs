@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using ECS.Messages;
 using UnityEngine;
 
 namespace ECS
 {
     public class Entity
     {
+        protected Dispatcher _messageDispatcher;
         public GameObject GameObject { get; private set; }
         public IReadOnlyDictionary<Type, Component> Components => _components;
 
@@ -13,11 +15,13 @@ namespace ECS
         private Dictionary<Type, Component> _components = new Dictionary<Type, Component>();
         private Action<Entity> _destroyAction;
         
-        public Entity(Action entityChangedCallback, GameObject gameObject, Action<Entity> destroyAction)
+        public Entity(Action entityChangedCallback, GameObject gameObject, Action<Entity> destroyAction, 
+            Dispatcher messageDispatcher)
         {
             EntityChanged = entityChangedCallback;
             GameObject = gameObject;
             _destroyAction = destroyAction;
+            _messageDispatcher = messageDispatcher;
         }
 
         public bool ValidForMask(IEnumerable<Type> componentTypes)
