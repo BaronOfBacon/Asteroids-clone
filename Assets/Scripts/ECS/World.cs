@@ -8,33 +8,30 @@ namespace ECS
     public class World
     {
         private List<Entity> _entities;
+        private List<Entity> _entitiesToDestroy;
         private Dictionary<Type, System> _systemsDictionary;
         private Dictionary<System, List<Entity>> _sortedEntitiesAndSystems;
 
         public World()
         {
             _entities = new List<Entity>();
+            _entitiesToDestroy = new List<Entity>();
             _systemsDictionary = new Dictionary<Type, System>();
             _sortedEntitiesAndSystems = new Dictionary<System, List<Entity>>();
         }
         
-        public Entity CreateEntity()
+        public Entity CreateEntity(GameObject gameObject)
         {
-            var entity = new Entity(RecalculateDependencies);
+            var entity = new Entity(RecalculateDependencies, gameObject, DestroyEntity);
+            _entities.Add(entity);
             RecalculateDependencies();
             return entity;
         }
-
+        
         public void DestroyEntity(Entity entity)
         {
-            if (!_entities.Contains(entity))
-            {
-                Debug.LogError("No such entity exist!");
-                return;
-            }
-            
-            _entities.Remove(entity);
-            RecalculateDependencies();
+            if (_entities.Contains(entity) && !_entitiesToDestroy.Contains(entity))
+                _entitiesToDestroy.Add(entity);
         }
 
         public void AddSystem(System system)
@@ -94,7 +91,7 @@ namespace ECS
                 #region Add valid
                 foreach (var entity in _entities)
                 {
-                    if (pair.Value.Contains(entity)) return;
+                    if (pair.Value.Contains(entity)) continue;
 
                     if (entity.ValidForMask(componentsMask))
                     {
@@ -104,6 +101,46 @@ namespace ECS
                 #endregion
             }
         }
-        
+
+        public void Update()
+        {
+            foreach (var pair in _sortedEntitiesAndSystems)
+            {
+                foreach (var entity in pair.Value)
+                {
+                    pair.Key.Process(entity);   
+                }
+                pair.Key.PostProcess();
+            }
+
+            if (!_entitiesToDestroy.Any()) return;
+            
+            while (_entitiesToDestroy.Any())
+            {
+                var entity = _entitiesToDestroy[0];
+                _entitiesToDestroy.RemoveAt(0);
+                _entities.Remove(entity);
+                
+                entity.Destroy();
+            }
+            
+            RecalculateDependencies();
+        }
+
+        public void Destroy()
+        {
+            foreach (var pair in _systemsDictionary)
+            {
+                pair.Value.Destroy();
+            }
+            
+            _systemsDictionary.Clear();
+            _sortedEntitiesAndSystems.Clear();
+            
+            foreach (var entity in _entities)
+            {
+                entity.InitDestroy();
+            }
+        }
     }
 }

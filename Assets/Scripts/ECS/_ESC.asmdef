@@ -1,7 +1,9 @@
 {
     "name": "_ESC",
     "rootNamespace": "ECS",
-    "references": [],
+    "references": [
+        "GUID:e233cdba0f73d4264aeaad84c8c7b257"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

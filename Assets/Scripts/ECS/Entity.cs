@@ -1,37 +1,51 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace ECS
 {
     public class Entity
     {
+        public GameObject GameObject { get; private set; }
         public IReadOnlyDictionary<Type, Component> Components => _components;
 
         private Action EntityChanged;
         private Dictionary<Type, Component> _components = new Dictionary<Type, Component>();
-
-        public Entity(Action entityChangedCallback)
+        private Action<Entity> _destroyAction;
+        
+        public Entity(Action entityChangedCallback, GameObject gameObject, Action<Entity> destroyAction)
         {
             EntityChanged = entityChangedCallback;
+            GameObject = gameObject;
+            _destroyAction = destroyAction;
         }
 
         public bool ValidForMask(IEnumerable<Type> componentTypes)
         {
-            return componentTypes.All(type => _components.ContainsKey(type));
+            foreach (var comparableType in componentTypes)
+            {
+                if (!_components.ContainsKey(comparableType))
+                    return false;
+            }
+
+            return true;
         }
         
-        public void AddComponent(Component component)
+        public Component AddComponent(Component component)
         {
             if (!_components.TryAdd(component.GetType(), component))
             {
                 Debug.LogError($"Can't add multiple component of type {component.GetType()}.");
-                return;
+                return null;
             }
             
-            _components.Add(component.GetType(), component);
             EntityChanged?.Invoke();
+            return component;
+        }
+
+        public T AddComponent<T>() where T: Component
+        {
+            return (T)AddComponent(Activator.CreateInstance<T>());
         }
 
         public void RemoveComponent(Type componentType)
@@ -52,9 +66,22 @@ namespace ECS
             EntityChanged?.Invoke();
         }
 
+        public T GetComponent<T>() where T: Component
+        {
+            _components.TryGetValue(typeof(T), out Component component);
+            return (T)component;
+        }
+
+        public void InitDestroy()
+        {
+            _destroyAction?.Invoke(this);
+        }
+
         public void Destroy()
         {
-            _components = null;
+            _components.Clear();
+            EntityChanged?.Invoke();
+            GameObject.Destroy(GameObject);
         }
     }
 }
