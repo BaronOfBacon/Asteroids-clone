@@ -59,6 +59,7 @@ namespace Asteroids.GameManager
             _world.AddSystem(new ScoreSystem(_scoreSettings));
             _world.AddSystem(new PlayerSpatialDataNotifierSystem());
             _world.AddSystem(new GameUISystem());
+            _world.AddSystem(new PlayerLaserUIDataNotifierSystem());
         }
 
         private void Start()

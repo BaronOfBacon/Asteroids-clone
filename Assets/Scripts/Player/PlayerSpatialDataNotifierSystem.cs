@@ -31,7 +31,6 @@ namespace Asteroids.Player
             spatialData = new Tuple<Vector2, float, Vector2>(movableComponent.Position,
                 movableComponent.Rotation.eulerAngles.z - 180f, movableComponent.Velocity);
             MessageDispatcher.SendMessage(MessageType.PlayerSpatialDataChanged, spatialData);
-            /*MessageDispatcher.Subscribe(MessageType.LaserDataChanged, HandleLaserDataChange);*/
         }
 
         public override void PostProcess()

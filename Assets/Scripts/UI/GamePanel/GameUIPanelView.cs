@@ -24,27 +24,27 @@ namespace Asteroids.UI.Game
 
         public void UpdateCoordinates(Vector2 position)
         {
-            _coordinatesLabel.SetText(COORDINATES_PREFIX + $" [{position.x:#.##}:{position.y:#.##}]");
+            _coordinatesLabel.SetText(COORDINATES_PREFIX + $" [{position.x:0.##}:{position.y:0.##}]");
         }
         
         public void UpdateAngle(float angle)
         {
-            _angleLabel.SetText(ANGLE_PREFIX + $" [{angle:#}]");
+            _angleLabel.SetText(ANGLE_PREFIX + $" [{angle:0}]");
         }
         
         public void UpdateSpeed(Vector2 velocity)
         {
-            _speedLabel.SetText(SPEED_PREFIX + $" [{velocity.x:#.##}:{velocity.y:#.##}]");
+            _speedLabel.SetText(SPEED_PREFIX + $" [{velocity.x:0.##}:{velocity.y:0.##}]");
         }
         
         public void UpdateLaserCharges(int charges)
         {
-            _laserChargesLabel.SetText(LASER_CHARGES_PREFIX + $" [{charges:#}]");
+            _laserChargesLabel.SetText(LASER_CHARGES_PREFIX + $" [{charges}]");
         }
 
         public void UpdateLaserChargesCooldown(float cooldown)
         {
-            _laserChargeCoolDown.SetText(LASER_CHARGES_COOLDOWN_PREFIX + $" [{cooldown:#.##}]");
+            _laserChargeCoolDown.SetText(LASER_CHARGES_COOLDOWN_PREFIX + $" [{cooldown}]");
         }
     }
 }
