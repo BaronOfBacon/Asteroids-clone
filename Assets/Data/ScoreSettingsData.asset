@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5963cec8b717c44ecb9fff6746280318, type: 3}
   m_Name: ScoreSettingsData
   m_EditorClassIdentifier: 
-  _asteroidKillPoints: 2
-  _asteroidFragmentKillPoints: 5
+  _asteroidKillPoints: 3
+  _asteroidFragmentKillPoints: 11

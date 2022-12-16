@@ -37,21 +37,17 @@ namespace Asteroids.Asteroid
         private FieldCalculationHelper _fieldCalculationHelper;
         private float _newAsteroidSpawnCoolDown;
 
-        public AsteroidsSpawnSystem(GameObject asteroidPrefab, GameObject asteroidFractionPrefab,
-            int asteroidsInitSpawnAmount, int asteroidFragmentsSpawnAmount, Vector2 asteroidVelocityRange,
-            Vector2 asteroidFragmentVelocityRange, Vector2 asteroidFragmentRandomAngleRange, 
-            FieldCalculationHelper fieldCalculationHelper, float newAsteroidSpawnCoolDown)
+        public AsteroidsSpawnSystem(AsteroidsSettings asteroidsSettings, FieldCalculationHelper fieldCalculationHelper)
         {
-            _asteroidPrefab = asteroidPrefab;
-            _asteroidFractionPrefab = asteroidFractionPrefab;
-            _asteroidsInitSpawnAmount = asteroidsInitSpawnAmount;
-            _asteroidFragmentsSpawnAmount = asteroidFragmentsSpawnAmount;
-            _asteroidVelocityRange = asteroidVelocityRange;
-            _asteroidFragmentVelocityRange = asteroidFragmentVelocityRange;
-            _asteroidFragmentRandomAngleRange = asteroidFragmentRandomAngleRange;
+            _asteroidPrefab = asteroidsSettings.AsteroidPrefab;
+            _asteroidFractionPrefab = asteroidsSettings.AsteroidFractionPrefab;
+            _asteroidsInitSpawnAmount = asteroidsSettings.AsteroidsSpawnAmount;
+            _asteroidFragmentsSpawnAmount = asteroidsSettings.AsteroidFragmentsSpawnAmount;
+            _asteroidVelocityRange = asteroidsSettings.AsteroidVelocityRange;
+            _asteroidFragmentVelocityRange = asteroidsSettings.AsteroidFragmentVelocityRange;
+            _asteroidFragmentRandomAngleRange = asteroidsSettings.AsteroidFragmentRandomAngleRange;
+            _newAsteroidSpawnCoolDown = asteroidsSettings.NewAsteroidSpawnCooldown;
             _fieldCalculationHelper = fieldCalculationHelper;
-            _newAsteroidSpawnCoolDown = newAsteroidSpawnCoolDown;
-            
             _buffer = new Collider2D[100];
             _newAsteroidSpawnTimeLeft = _newAsteroidSpawnCoolDown;
         }

@@ -2,13 +2,13 @@
     "name": "Player",
     "rootNamespace": "Asteroids.Player",
     "references": [
+        "GUID:b03c74413b4eb4dc9bcc1d1ee60fa379",
         "GUID:2749ffbd14e61437aa73c1d079f19f5b",
         "GUID:75469ad4d38634e559750d17036d5f7c",
         "GUID:18a35f11008c34b3c8e0a3724553d89a",
         "GUID:7a4348ca743b1412895649fd4d632ced",
         "GUID:90c5d8faf12914146b77406692bdf45a",
         "GUID:c86e4bb4827ed48e3b2f322b94ee3c08",
-        "GUID:b03c74413b4eb4dc9bcc1d1ee60fa379",
         "GUID:bc1008cca8cec4684814e5f0876f5a0e",
         "GUID:e5ba601e97d5c4b79a373ddf5bc87c0f"
     ],

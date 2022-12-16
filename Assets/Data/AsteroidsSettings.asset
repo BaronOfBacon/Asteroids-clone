@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26eb7484d8c64c90912bfd32eeed885, type: 3}
+  m_Name: AsteroidsSettings
+  m_EditorClassIdentifier: 
+  _asteroidPrefab: {fileID: 3129303433761535476, guid: 6fc7a837c3c2a4fef8455ff94ece218c, type: 3}
+  asteroidFractionPrefab: {fileID: 3117347843185688591, guid: a0833a3ed6bb34464a8ab50b659abe8e, type: 3}
+  _asteroidsSpawnAmount: 6
+  _asteroidFragmentsSpawnAmount: 4
+  _asteroidVelocityRange: {x: 3, y: 5}
+  _asteroidFragmentVelocityRange: {x: 6, y: 8}
+  _asteroidFragmentRandomAngleRange: {x: -4, y: 4}
+  newAsteroidSpawnCooldown: 3

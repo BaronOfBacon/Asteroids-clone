@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Asteroids.Input;
 using ECS;
 using UnityEngine.InputSystem;
-using Component = ECS.Component;
 
 namespace Asteroids.Player
 {

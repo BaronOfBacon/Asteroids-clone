@@ -7,6 +7,7 @@ using Asteroids.LaserWeapon;
 using Asteroids.Movable;
 using Asteroids.Player;
 using Asteroids.Score;
+using Asteroids.UI.Game;
 using Asteroids.Weapon.LaserWeapon;
 using Asteroids.Weapon.Projectile;
 using Asteroids.Weapon.RegularWeapon;
@@ -21,8 +22,13 @@ namespace Asteroids.GameManager
     {
         [SerializeField] 
         private GameSettings _gameSettings;
+        [SerializeField] 
+        private AsteroidsSettings _asteroidsSettings;
         [SerializeField]
         private ScoreSettings _scoreSettings;
+
+        [SerializeField] 
+        private GameUIPanelView _gameUIPanel;
         
         private World _world;
         private InputActions _inputActions;
@@ -39,7 +45,7 @@ namespace Asteroids.GameManager
             var fieldSize = _gameSettings.GameFieldSize;
             var boundariesDistance = new Vector2(fieldSize.x / 2f, fieldSize.y / 2f);
             var fieldCalculationHelper = new FieldCalculationHelper(boundariesDistance);
-            _world.AddSystem(new Movable.MovableSystem(_gameSettings.ForwardAccelerationMultiplier,
+            _world.AddSystem(new MovableSystem(_gameSettings.ForwardAccelerationMultiplier,
                 _gameSettings.MaxSpeed,fieldCalculationHelper));
             _world.AddSystem(new PlayerInputSystem(_inputActions));
             _world.AddSystem(new PlayerMoveSystem(_gameSettings.PlayerRotationSpeed));
@@ -48,22 +54,21 @@ namespace Asteroids.GameManager
             _world.AddSystem(new PlayerDeathDetectorSystem());
             _world.AddSystem(new ProjectileOnCollisionDestroySystem());
             _world.AddSystem(new AsteroidOnCollisionDestroySystem());
-            _asteroidsSpawnSystem = new AsteroidsSpawnSystem(_gameSettings.AsteroidPrefab,
-                _gameSettings.AsteroidFragmentPrefab,
-                _gameSettings.AsteroidsSpawnAmount, _gameSettings.AsteroidFragmentsSpawnAmount,
-                _gameSettings.AsteroidVelocityRange, _gameSettings.AsteroidFragmentVelocityRange, 
-                _gameSettings.AsteroidFragmentRandomAngleRange, fieldCalculationHelper, 
-                _gameSettings.NewAsteroidSpawnCooldown);
+            _asteroidsSpawnSystem = new AsteroidsSpawnSystem(_asteroidsSettings, fieldCalculationHelper);
             _world.AddSystem(_asteroidsSpawnSystem);
             _world.AddSystem(new ScoreSystem(_scoreSettings));
+            _world.AddSystem(new PlayerSpatialDataNotifierSystem());
+            _world.AddSystem(new GameUISystem());
         }
 
         private void Start()
         {
             InitPlayer();
             _asteroidsSpawnSystem.Start();
-            //var score = _world.CreateEntity(null);
-            //score.AddComponent<ScoreComponent>();
+            var score = _world.CreateEntity(null);
+            score.AddComponent<ScoreComponent>();
+            var gamePanelEntity = _world.CreateEntity(_gameUIPanel.gameObject);
+            gamePanelEntity.AddComponent(new GameUIComponent(_gameUIPanel));
         }
 
         private void InitPlayer()
@@ -93,20 +98,6 @@ namespace Asteroids.GameManager
             collisionDetectorComponent.SubscribeDetector(collisionDetector);
         }
 
-        private void InitTestAsteroid()
-        {
-            var movableInitData = new MovableData()
-            {
-                acceleration = Vector2.zero,
-                position = new Vector2(-3f,0f),
-                rotation = Quaternion.FromToRotation(Vector3.up, new Vector2(-0.3f, 0.7f)),
-                velocity = Vector2.up * 2f,
-                friction = 0f
-            };
-
-            _asteroidsSpawnSystem.SpawnAsteroid(movableInitData, _gameSettings.AsteroidPrefab, false);
-        }
-        
         private void Update()
         {
             _world.Process();

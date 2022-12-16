@@ -4,6 +4,8 @@ namespace ECS.Messages
     {
         SpawnAsteroidFragments,
         AsteroidKilled,
-        PlayerDied
+        PlayerDied,
+        PlayerSpatialDataChanged,
+        LaserDataChanged,
     }
 }
