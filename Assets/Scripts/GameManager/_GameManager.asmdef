@@ -2,15 +2,17 @@
     "name": "GameManager",
     "rootNamespace": "Asteroids.GameManager",
     "references": [
-        "GUID:f049d048a5f9f45d98ef1a2e2e983711",
         "GUID:2749ffbd14e61437aa73c1d079f19f5b",
-        "GUID:d6ef394006dd84e8ca7d5c6bbffff5be",
         "GUID:ead60d0035c56451881c3e172cf29e67",
-        "GUID:ec5cfb410a8284a7d8c123a8ce9ea454",
         "GUID:18a35f11008c34b3c8e0a3724553d89a",
         "GUID:90c5d8faf12914146b77406692bdf45a",
         "GUID:7a4348ca743b1412895649fd4d632ced",
-        "GUID:c86e4bb4827ed48e3b2f322b94ee3c08"
+        "GUID:c86e4bb4827ed48e3b2f322b94ee3c08",
+        "GUID:e233cdba0f73d4264aeaad84c8c7b257",
+        "GUID:b03c74413b4eb4dc9bcc1d1ee60fa379",
+        "GUID:bc1008cca8cec4684814e5f0876f5a0e",
+        "GUID:e5ba601e97d5c4b79a373ddf5bc87c0f",
+        "GUID:449bdcb7fbdf14449a8156071f6160d9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
