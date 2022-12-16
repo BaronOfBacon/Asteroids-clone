@@ -1,6 +1,6 @@
 {
-    "name": "Core",
-    "rootNamespace": "Core",
+    "name": "_Data",
+    "rootNamespace": "Data",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
