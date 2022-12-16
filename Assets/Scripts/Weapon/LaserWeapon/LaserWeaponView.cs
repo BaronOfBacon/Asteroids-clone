@@ -1,13 +1,9 @@
-using System;
-using Core;
 using UnityEngine;
 
 namespace Asteroids.LaserWeapon
 {
-    public class LaserWeaponView : View
+    public class LaserWeaponView : MonoBehaviour
     {
-        
-        public EventHandler OnUpdate;
         public LineRenderer LineRenderer => _lineRenderer;
 
         [SerializeField] 
@@ -31,10 +27,6 @@ namespace Asteroids.LaserWeapon
         {
             _lineRenderer.enabled = state;
             _collider.enabled = state;
-        }
-        public void Update()
-        {
-            OnUpdate?.Invoke(this, null);
         }
     }
 }
