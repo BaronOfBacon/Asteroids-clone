@@ -14,11 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameFieldSize: {x: 21, y: 13}
   _maxSpeed: 15
-  forwardAccelerationMultiplier: 10
+  _playerPrefab: {fileID: 9058393190476085489, guid: a47162e44655746eb82876491b9e47dd, type: 3}
+  _forwardAccelerationMultiplier: 7
   _playerRotationSpeed: 0.3
   _playerFriction: 1.7
   _projectilePrefab: {fileID: 6877371903405823814, guid: fb80b421f82b142d0ac20388dfd04e94, type: 3}
   _projectileSpeed: 10
-  laserChargesCapacity: 4
-  laserActiveTimeDuration: 0.5
-  laserChargeCoolDown: 5
+  _laserChargesCapacity: 4
+  _laserActiveTimeDuration: 0.5
+  _laserChargeCoolDown: 2
+  _asteroidPrefab: {fileID: 3129303433761535476, guid: 6fc7a837c3c2a4fef8455ff94ece218c, type: 3}
+  _asteroidFragmentPrefab: {fileID: 3117347843185688591, guid: a0833a3ed6bb34464a8ab50b659abe8e, type: 3}
+  _asteroidsSpawnAmount: 4
+  _asteroidFragmentsSpawnAmount: 4
+  _asteroidVelocityRange: {x: 3, y: 4}
+  _asteroidFragmentVelocityRange: {x: 8, y: 11}
+  _asteroidDamageLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _asteroidDestroyLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+  _asteroidIgnoreLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
