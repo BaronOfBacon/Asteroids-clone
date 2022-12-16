@@ -1,8 +1,0 @@
-using Core;
-
-namespace NAMESPACE
-{
-    public class NAMEView : View
-    {
-    }
-}
