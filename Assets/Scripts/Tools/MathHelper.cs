@@ -27,5 +27,10 @@ namespace Tools
                 return false;
             }
         }
+
+        public static Quaternion GetRandom2DRotation()
+        {
+            return Quaternion.Euler(0f,0f,Random.Range(0f, 359f));
+        }
     }
 }
