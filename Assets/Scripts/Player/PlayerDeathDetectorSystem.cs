@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Asteroids.Collisions;
 using ECS;
+using ECS.Messages;
 using UnityEngine;
 
 namespace Asteroids.Player
@@ -28,6 +29,7 @@ namespace Asteroids.Player
             var collisionDetector = entity.GetComponent<CollisionDetectorComponent>();
             if (collisionDetector.CollidingObjects.Any())
             {
+                MessageDispatcher.SendMessage(MessageType.PlayerDied, null);
                 Debug.Log("Player died");
             }
         }

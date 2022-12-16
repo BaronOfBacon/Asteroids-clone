@@ -92,7 +92,5 @@ namespace Data
         [SerializeField] 
         private float newAsteroidSpawnCooldown;
         #endregion
-
-
     }
 }

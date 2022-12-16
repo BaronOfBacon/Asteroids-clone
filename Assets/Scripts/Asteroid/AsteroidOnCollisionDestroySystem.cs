@@ -48,7 +48,7 @@ namespace Asteroids.Asteroid
 
             if (triggerDetector.CollidingObjects.Any(go => go.layer != _playerLayerMask))
             {
-                MessageDispatcher.SendMessage(MessageType.AsteroidDestroyed, asteroidComponent);
+                MessageDispatcher.SendMessage(MessageType.AsteroidKilled, asteroidComponent);
                 entity.InitDestroy();   
             }
         }

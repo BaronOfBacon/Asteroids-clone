@@ -6,6 +6,7 @@ using Asteroids.Input;
 using Asteroids.LaserWeapon;
 using Asteroids.Movable;
 using Asteroids.Player;
+using Asteroids.Score;
 using Asteroids.Weapon.LaserWeapon;
 using Asteroids.Weapon.Projectile;
 using Asteroids.Weapon.RegularWeapon;
@@ -20,6 +21,8 @@ namespace Asteroids.GameManager
     {
         [SerializeField] 
         private GameSettings _gameSettings;
+        [SerializeField]
+        private ScoreSettings _scoreSettings;
         
         private World _world;
         private InputActions _inputActions;
@@ -52,12 +55,15 @@ namespace Asteroids.GameManager
                 _gameSettings.AsteroidFragmentRandomAngleRange, fieldCalculationHelper, 
                 _gameSettings.NewAsteroidSpawnCooldown);
             _world.AddSystem(_asteroidsSpawnSystem);
+            _world.AddSystem(new ScoreSystem(_scoreSettings));
         }
 
         private void Start()
         {
             InitPlayer();
             _asteroidsSpawnSystem.Start();
+            //var score = _world.CreateEntity(null);
+            //score.AddComponent<ScoreComponent>();
         }
 
         private void InitPlayer()

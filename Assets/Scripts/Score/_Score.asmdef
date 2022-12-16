@@ -1,0 +1,17 @@
+{
+    "name": "_Score",
+    "rootNamespace": "Asteroids.Score",
+    "references": [
+        "GUID:b03c74413b4eb4dc9bcc1d1ee60fa379",
+        "GUID:449bdcb7fbdf14449a8156071f6160d9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

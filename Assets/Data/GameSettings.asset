@@ -31,4 +31,4 @@ MonoBehaviour:
   _asteroidVelocityRange: {x: 3, y: 4}
   _asteroidFragmentVelocityRange: {x: 4, y: 6}
   _asteroidFragmentRandomAngleRange: {x: -4, y: 4}
-  newAsteroidSpawnCooldown: 5
+  newAsteroidSpawnCooldown: 2

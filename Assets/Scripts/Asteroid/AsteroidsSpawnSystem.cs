@@ -60,7 +60,7 @@ namespace Asteroids.Asteroid
         {
             base.Initialize(world, messageDispatcher);
             MessageDispatcher.Subscribe(MessageType.SpawnAsteroidFragments, SpawnAsteroidFractions);
-            MessageDispatcher.Subscribe(MessageType.AsteroidDestroyed, HandleAsteroidDestroyed);
+            MessageDispatcher.Subscribe(MessageType.AsteroidKilled, HandleAsteroidDestroyed);
         }
 
         public override void Process(Entity entity)
@@ -203,7 +203,7 @@ namespace Asteroids.Asteroid
         public override void Destroy()
         {
             MessageDispatcher.Unsubscribe(MessageType.SpawnAsteroidFragments, SpawnAsteroidFractions);
-            MessageDispatcher.Unsubscribe(MessageType.AsteroidDestroyed, HandleAsteroidDestroyed);
+            MessageDispatcher.Unsubscribe(MessageType.AsteroidKilled, HandleAsteroidDestroyed);
         }
     }
 }
