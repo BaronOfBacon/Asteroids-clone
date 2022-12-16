@@ -1,8 +1,8 @@
 {
-    "name": "DeathTracker",
-    "rootNamespace": "Asteroids.DeathTracker",
+    "name": "_Collisions",
+    "rootNamespace": "Asteroids.Collisions",
     "references": [
-        "GUID:f049d048a5f9f45d98ef1a2e2e983711"
+        "GUID:b03c74413b4eb4dc9bcc1d1ee60fa379"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
