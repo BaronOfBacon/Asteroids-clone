@@ -16,7 +16,7 @@ MonoBehaviour:
   asteroidFractionPrefab: {fileID: 3117347843185688591, guid: a0833a3ed6bb34464a8ab50b659abe8e, type: 3}
   _asteroidsSpawnAmount: 6
   _asteroidFragmentsSpawnAmount: 4
-  _asteroidVelocityRange: {x: 3, y: 5}
-  _asteroidFragmentVelocityRange: {x: 6, y: 8}
+  _asteroidVelocityRange: {x: 2, y: 4}
+  _asteroidFragmentVelocityRange: {x: 5, y: 7}
   _asteroidFragmentRandomAngleRange: {x: -4, y: 4}
   newAsteroidSpawnCooldown: 3

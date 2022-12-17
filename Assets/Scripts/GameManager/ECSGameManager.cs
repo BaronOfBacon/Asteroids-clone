@@ -1,4 +1,3 @@
-using System;
 using Asteroids.Asteroid;
 using Asteroids.Collisions;
 using Asteroids.Helpers;
@@ -7,18 +6,18 @@ using Asteroids.LaserWeapon;
 using Asteroids.Movable;
 using Asteroids.Player;
 using Asteroids.Score;
+using Asteroids.UFO;
 using Asteroids.UI.Game;
 using Asteroids.Weapon.LaserWeapon;
 using Asteroids.Weapon.Projectile;
 using Asteroids.Weapon.RegularWeapon;
-using Data;
 using ECS;
 using ECS.Messages;
 using UnityEngine;
 
 namespace Asteroids.GameManager
 {
-    public class ECSInitializer : MonoBehaviour
+    public class ECSGameManager : MonoBehaviour
     {
         [SerializeField] 
         private GameSettings _gameSettings;
@@ -26,6 +25,8 @@ namespace Asteroids.GameManager
         private AsteroidsSettings _asteroidsSettings;
         [SerializeField]
         private ScoreSettings _scoreSettings;
+        [SerializeField] 
+        private PursuitPlayerSettings _pursuitPlayerSettings;
 
         [SerializeField] 
         private GameUIPanelView _gameUIPanel;
@@ -35,15 +36,14 @@ namespace Asteroids.GameManager
         private World _world;
         private InputActions _inputActions;
         private AsteroidsSpawnSystem _asteroidsSpawnSystem;
+        private PursuitPlayerSystem _pursuitPlayerSystem;
         private Dispatcher _messageDispatcher;
         private Entity _player;
         
         private void Awake()
         {
             _messageDispatcher = new Dispatcher();
-            
             _world = new World(_messageDispatcher);
-
             _inputActions = new InputActions();
 
             var fieldSize = _gameSettings.GameFieldSize;
@@ -65,6 +65,9 @@ namespace Asteroids.GameManager
             _world.AddSystem(new GameUISystem(_gameUIPanel));
             _world.AddSystem(new PlayerLaserUIDataNotifierSystem());
             _world.AddSystem(new EndGameUISystem(_endGameUIPanel));
+            _pursuitPlayerSystem = new PursuitPlayerSystem(fieldCalculationHelper, _pursuitPlayerSettings);
+            _world.AddSystem(_pursuitPlayerSystem);
+            _world.AddSystem(new PursuerOnCollisionDestroySystem());
 
             _messageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDeath);
             _messageDispatcher.Subscribe(MessageType.RestartGame, Restart);
@@ -83,6 +86,7 @@ namespace Asteroids.GameManager
         private void InitPlayer()
         {
             var playerGO = GameObject.Instantiate(_gameSettings.PlayerPrefab);
+            _asteroidsSpawnSystem.SetSpawnAvoidableObject(playerGO);
             _player = _world.CreateEntity(playerGO);
             var playerMovableInitData = new MovableData()
             {
@@ -105,6 +109,8 @@ namespace Asteroids.GameManager
             var collisionDetector = playerGO.GetComponent<CollisionDetector2D>();
             var collisionDetectorComponent = (CollisionDetectorComponent)_player.AddComponent(new CollisionDetectorComponent());
             collisionDetectorComponent.SubscribeDetector(collisionDetector);
+            
+            _pursuitPlayerSystem.SetTarget(playerGO);
         }
 
         private void Update()

@@ -25,7 +25,7 @@ namespace Asteroids.Asteroid
         private Dictionary<AsteroidComponent, Entity> _asteroids = new Dictionary<AsteroidComponent, Entity>();
         private Collider2D[] _buffer;
         private float _newAsteroidSpawnTimeLeft;
-        
+        private GameObject _avoidableSpawnObject;
         
         private GameObject _asteroidFractionPrefab;
         private GameObject _asteroidPrefab;
@@ -57,9 +57,13 @@ namespace Asteroids.Asteroid
             base.Initialize(world, messageDispatcher);
             MessageDispatcher.Subscribe(MessageType.SpawnAsteroidFragments, SpawnAsteroidFractions);
             MessageDispatcher.Subscribe(MessageType.AsteroidKilled, HandleAsteroidDestroyed);
-            
             MessageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDeath);
             MessageDispatcher.Subscribe(MessageType.RestartGame, Restart);
+        }
+
+        public void SetSpawnAvoidableObject(GameObject avoidableSpawnObject)
+        {
+            _avoidableSpawnObject = avoidableSpawnObject;
         }
 
         public override void Process(Entity entity)
@@ -68,6 +72,7 @@ namespace Asteroids.Asteroid
 
         public override void PostProcess()
         {
+            if (!_enabled) return;
             
             if (_asteroids.Count(asteroid => !asteroid.Key.IsFraction) < _asteroidsInitSpawnAmount)
             {
@@ -187,7 +192,15 @@ namespace Asteroids.Asteroid
             Vector3 position;
             do
             {
-                position = _fieldCalculationHelper.GetRandomPointFromInside();
+                Vector2 avoidableCenter;
+                    if(_avoidableSpawnObject != null)
+                        avoidableCenter = _avoidableSpawnObject.transform.position;
+                    else
+                    {
+                        avoidableCenter = Vector2.zero;
+                    }
+                position = _fieldCalculationHelper.GetSafetySpawnPosition(4f, 10f, 
+                    avoidableCenter);
             } while (Physics2D.OverlapCircleNonAlloc(position, OVERLAP_RADIUS, _buffer) != 0);
 
             return position;

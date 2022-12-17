@@ -29,6 +29,7 @@ namespace Asteroids.Score
         {
             base.Initialize(world, messageDispatcher);
             MessageDispatcher.Subscribe(MessageType.AsteroidKilled, HandleAsteroidKilled);
+            MessageDispatcher.Subscribe(MessageType.PlayerPursuerKilled, PlayerPursuerKilled);
             MessageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDied);
         }
 
@@ -50,6 +51,11 @@ namespace Asteroids.Score
             _score += pointForKill;
         }
         
+        private void PlayerPursuerKilled(object arg)
+        {
+            _score += _settings.PlayerPursuerKillPoints;
+        }
+        
         private void HandlePlayerDied(object arg)
         {
             MessageDispatcher.SendMessage(MessageType.BestScore, _score);
@@ -59,6 +65,7 @@ namespace Asteroids.Score
         public override void Destroy()
         {
             MessageDispatcher.Unsubscribe(MessageType.AsteroidKilled, HandleAsteroidKilled);
+            MessageDispatcher.Unsubscribe(MessageType.PlayerPursuerKilled, PlayerPursuerKilled);
             MessageDispatcher.Unsubscribe(MessageType.PlayerDied, HandlePlayerDied);
         }
     }

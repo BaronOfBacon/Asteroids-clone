@@ -403,6 +403,7 @@ MonoBehaviour:
   _gameSettings: {fileID: 11400000, guid: d33be3e51821b479c81f5962f3f2f348, type: 2}
   _asteroidsSettings: {fileID: 11400000, guid: b045e4c67ae394f50b10f844eb8f989c, type: 2}
   _scoreSettings: {fileID: 11400000, guid: 6b650a73664ec490696976a6c4740e18, type: 2}
+  _pursuitPlayerSettings: {fileID: 11400000, guid: a8a87b6cdafb546439138d40b86d3102, type: 2}
   _gameUIPanel: {fileID: 315241402}
   _endGameUIPanel: {fileID: 9075856399841387693}
 --- !u!1001 &847999415

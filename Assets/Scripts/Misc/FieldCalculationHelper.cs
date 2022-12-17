@@ -137,6 +137,35 @@ namespace Asteroids.Helpers
             var y = Random.Range(-_fieldBoundariesDistance.y, _fieldBoundariesDistance.y);
             return new Vector2(x, y);
         }
+
+        public Vector2 GetRandomPositionOnBorders()
+        {
+            Vector2 position;
+            var sign = (Random.Range(0, 100) % 2) == 0 ? -1 : 1;
+            if ((Random.Range(0, 100) % 2) > 0)
+            {
+                position.x = sign * _fieldBoundariesDistance.x;
+                position.y = Random.Range(-_fieldBoundariesDistance.y, _fieldBoundariesDistance.y);
+            }
+            else
+            {
+                position.x = Random.Range(-_fieldBoundariesDistance.x, _fieldBoundariesDistance.x);
+                position.y = sign * _fieldBoundariesDistance.y;
+            }
+
+            return position;
+        }
+        
+        public Vector2 GetSafetySpawnPosition(float safetyRadius, float spawnRadius, Vector2 center)
+        {
+            var randomRotation = Quaternion.Euler(0f, 0f, Random.Range(0f, 359f));
+            var randomDistance = Random.Range(safetyRadius, spawnRadius);
+            var spawnOffset = (Vector2)(randomRotation * Vector2.up * randomDistance);
+            var position = center + spawnOffset;
+            /*position.x = Mathf.Clamp(position.x, -_fieldBoundariesDistance.x, _fieldBoundariesDistance.x);
+            position.y = Mathf.Clamp(position.y, -_fieldBoundariesDistance.y, _fieldBoundariesDistance.y);*/
+            return position;
+        }
         
         private struct RectVertex
         {

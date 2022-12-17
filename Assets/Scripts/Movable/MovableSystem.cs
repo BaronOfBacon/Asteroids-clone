@@ -55,21 +55,21 @@ namespace Asteroids.Movable
                     movableComponent.Acceleration = Vector2.zero;
                 }
             }
-            
+
             if (movableComponent.Acceleration != Vector2.zero)
             {
                 movableComponent.Velocity += movableComponent.Acceleration * Time.deltaTime;
             }
-            
-            
+
             var timeDependentFriction = movableComponent.Friction * Time.deltaTime;
             var speedWithFriction = movableComponent.Velocity.magnitude - timeDependentFriction;
             var maxSpeed = Mathf.Clamp(speedWithFriction, 0, _maxSpeed);
+            
+            
             movableComponent.Velocity = Vector3.ClampMagnitude(movableComponent.Velocity, maxSpeed);
             
             var newPosition = movableComponent.Position + movableComponent.Velocity * Time.deltaTime;
-            
-            
+
             if (!_fieldCalculationHelper.IsInsideOfBoundaries(newPosition))
             {
                 if (movableComponent.DestroyOutsideTheField)

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5963cec8b717c44ecb9fff6746280318, type: 3}
-  m_Name: ScoreSettingsData
+  m_Script: {fileID: 11500000, guid: 6fcc312ef0e66452392f5fc49550af7f, type: 3}
+  m_Name: PursuitPlayerSettings
   m_EditorClassIdentifier: 
-  _asteroidKillPoints: 11
-  _asteroidFractionKillPoints: 33
-  _playerPursuerKillPoints: 666
+  _spawnCooldown: 5
+  _persuerPrefab: {fileID: 9175895808681416966, guid: b3dd9feb15cfa47c1b5d6df852398b4a, type: 3}
+  _persuerSpeed: 3

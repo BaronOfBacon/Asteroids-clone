@@ -8,6 +8,7 @@ namespace ECS.Messages
         PlayerSpatialDataChanged,
         LaserDataChanged,
         BestScore,
-        RestartGame
+        RestartGame,
+        PlayerPursuerKilled,
     }
 }
