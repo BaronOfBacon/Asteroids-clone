@@ -10,5 +10,7 @@ namespace ECS.Messages
         BestScore,
         RestartGame,
         PlayerPursuerKilled,
+        SpawnPlayer,
+        PlayerSpawned,
     }
 }

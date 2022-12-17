@@ -50,6 +50,7 @@ namespace Asteroids.UFO
             MessageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDied);
             MessageDispatcher.Subscribe(MessageType.PlayerPursuerKilled, HandlePursuerKilled);
             MessageDispatcher.Subscribe(MessageType.RestartGame, Restart);
+            MessageDispatcher.Subscribe(MessageType.PlayerSpawned, HandlePlayerSpawned);
         }
         
         public override void Process(Entity entity)
@@ -100,11 +101,6 @@ namespace Asteroids.UFO
             _pursuers.Add(pursuerComponent, pursuer);
         }
 
-        public void SetTarget(GameObject target)
-        {
-            _target = target;
-        }
-        
         public override void PostProcess()
         {
             if (!_enabled) return;
@@ -153,11 +149,18 @@ namespace Asteroids.UFO
             entity?.InitDestroy();
         }
 
+        private void HandlePlayerSpawned(object player)
+        {
+            var playerEntity = (Entity)player;
+            _target = playerEntity.GameObject;
+        }
+
         public override void Destroy()
         {
-            MessageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDied);
-            MessageDispatcher.Subscribe(MessageType.PlayerPursuerKilled, HandlePursuerKilled);
-            MessageDispatcher.Subscribe(MessageType.RestartGame, Restart);
+            MessageDispatcher.Unsubscribe(MessageType.PlayerDied, HandlePlayerDied);
+            MessageDispatcher.Unsubscribe(MessageType.PlayerPursuerKilled, HandlePursuerKilled);
+            MessageDispatcher.Unsubscribe(MessageType.RestartGame, Restart);
+            MessageDispatcher.Unsubscribe(MessageType.PlayerSpawned, HandlePlayerSpawned);
         }
     }
 }

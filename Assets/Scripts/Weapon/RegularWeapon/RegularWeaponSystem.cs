@@ -26,7 +26,14 @@ namespace Asteroids.Weapon.RegularWeapon
             var inputComponent = entity.GetComponent<PlayerInputComponent>();
 
             if (!inputComponent.Fire) return;
+
+            SpawnProjectile(entity);
             
+        }
+
+        //Can be made by object pooling...
+        private void SpawnProjectile(Entity entity)
+        {
             var weaponComponent = entity.GetComponent<RegularWeaponComponent>();
             
             var rootTransform = entity.GameObject.transform;
@@ -53,13 +60,11 @@ namespace Asteroids.Weapon.RegularWeapon
         }
 
         public override void PostProcess()
-        {
-            
+        {    
         }
 
         public override void Destroy()
         {
-            //_inputActions.Player.Fire.started -= HandleFire;
         }
     }
 }

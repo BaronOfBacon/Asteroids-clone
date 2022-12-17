@@ -1,8 +1,6 @@
 using Asteroids.Asteroid;
-using Asteroids.Collisions;
 using Asteroids.Helpers;
 using Asteroids.Input;
-using Asteroids.LaserWeapon;
 using Asteroids.Movable;
 using Asteroids.Player;
 using Asteroids.Score;
@@ -27,7 +25,13 @@ namespace Asteroids.GameManager
         private ScoreSettings _scoreSettings;
         [SerializeField] 
         private PursuitPlayerSettings _pursuitPlayerSettings;
-
+        [SerializeField] 
+        private PlayerSettings _playerSettings;
+        [SerializeField] 
+        private RegularWeaponSettings _regularWeaponSettings;
+        [SerializeField] 
+        private LaserWeaponSettings _laserWeaponSettings;
+        
         [SerializeField] 
         private GameUIPanelView _gameUIPanel;
         [SerializeField] 
@@ -38,7 +42,6 @@ namespace Asteroids.GameManager
         private AsteroidsSpawnSystem _asteroidsSpawnSystem;
         private PursuitPlayerSystem _pursuitPlayerSystem;
         private Dispatcher _messageDispatcher;
-        private Entity _player;
         
         private void Awake()
         {
@@ -46,14 +49,23 @@ namespace Asteroids.GameManager
             _world = new World(_messageDispatcher);
             _inputActions = new InputActions();
 
+            InitSystems();
+
+            _messageDispatcher.Subscribe(MessageType.RestartGame, Restart);
+        }
+
+        private void InitSystems()
+        {
             var fieldSize = _gameSettings.GameFieldSize;
             var boundariesDistance = new Vector2(fieldSize.x / 2f, fieldSize.y / 2f);
             var fieldCalculationHelper = new FieldCalculationHelper(boundariesDistance);
-            _world.AddSystem(new MovableSystem(_gameSettings.ForwardAccelerationMultiplier,
+            
+            _world.AddSystem(new MovableSystem(_playerSettings.ForwardAccelerationMultiplier,
                 _gameSettings.MaxSpeed,fieldCalculationHelper));
             _world.AddSystem(new PlayerInputSystem(_inputActions));
-            _world.AddSystem(new PlayerMoveSystem(_gameSettings.PlayerRotationSpeed));
+            _world.AddSystem(new PlayerMoveSystem(_playerSettings.PlayerRotationSpeed));
             _world.AddSystem(new RegularWeaponSystem(_world));
+            _world.AddSystem(new ProjectilesDestroyerSystem());
             _world.AddSystem(new LaserWeaponSystem(fieldCalculationHelper));
             _world.AddSystem(new PlayerDeathDetectorSystem());
             _world.AddSystem(new ProjectileOnCollisionDestroySystem());
@@ -68,49 +80,17 @@ namespace Asteroids.GameManager
             _pursuitPlayerSystem = new PursuitPlayerSystem(fieldCalculationHelper, _pursuitPlayerSettings);
             _world.AddSystem(_pursuitPlayerSystem);
             _world.AddSystem(new PursuerOnCollisionDestroySystem());
-
-            _messageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDeath);
-            _messageDispatcher.Subscribe(MessageType.RestartGame, Restart);
+            _world.AddSystem(new PlayerSpawnSystem(_playerSettings, _regularWeaponSettings, _laserWeaponSettings));
         }
-
+        
         private void Start()
         {
-            InitPlayer();
-            _asteroidsSpawnSystem.Start();
+            _messageDispatcher.SendMessage(MessageType.SpawnPlayer, null);
+            
             var score = _world.CreateEntity(null);
             score.AddComponent<ScoreComponent>();
             var gamePanelEntity = _world.CreateEntity(_gameUIPanel.gameObject);
             gamePanelEntity.AddComponent(new GameUIComponent());
-        }
-
-        private void InitPlayer()
-        {
-            var playerGO = GameObject.Instantiate(_gameSettings.PlayerPrefab);
-            _asteroidsSpawnSystem.SetSpawnAvoidableObject(playerGO);
-            _player = _world.CreateEntity(playerGO);
-            var playerMovableInitData = new MovableData()
-            {
-                acceleration = Vector2.zero,
-                position = Vector2.zero,
-                rotation = Quaternion.FromToRotation(Vector3.up, new Vector2(-0.3f, 0.7f)),
-                velocity = Vector2.zero,
-                friction = _gameSettings.PlayerFriction
-            };
-            _player.AddComponent<PlayerComponent>();
-            _player.AddComponent(new MovableComponent(playerMovableInitData));
-            _player.AddComponent(new PlayerInputComponent());
-            _player.AddComponent(new RegularWeaponComponent(_gameSettings.ProjectilePrefab,
-                _gameSettings.ProjectileSpeed, _gameSettings.ProjectileSpawnOffset));
-
-            var laserView = playerGO.GetComponent<LaserWeaponView>();
-            _player.AddComponent(new LaserWeaponComponent(laserView, _gameSettings.LaserActiveTimeDuration,
-                _gameSettings.LaserChargesCapacity, _gameSettings.LaserChargeCooldown));
-
-            var collisionDetector = playerGO.GetComponent<CollisionDetector2D>();
-            var collisionDetectorComponent = (CollisionDetectorComponent)_player.AddComponent(new CollisionDetectorComponent());
-            collisionDetectorComponent.SubscribeDetector(collisionDetector);
-            
-            _pursuitPlayerSystem.SetTarget(playerGO);
         }
 
         private void Update()
@@ -122,21 +102,15 @@ namespace Asteroids.GameManager
         {
             _world.LateUpdate();
         }
-        
-        private void HandlePlayerDeath(object arg)
-        {
-            _player.InitDestroy();
-        }
-        
+
         private void Restart(object arg)
         {
-            InitPlayer();
+            _messageDispatcher.SendMessage(MessageType.SpawnPlayer, null);
         }
 
         private void OnDestroy()
         {
-            _messageDispatcher.Unsubscribe(MessageType.PlayerDied, HandlePlayerDeath);
-            _messageDispatcher.Subscribe(MessageType.RestartGame, Restart);
+            _messageDispatcher.Unsubscribe(MessageType.RestartGame, Restart);
             _world.Destroy();
         }
     }

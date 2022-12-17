@@ -4,6 +4,7 @@ using Asteroids.Helpers;
 using ECS;
 using ECS.Messages;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Asteroids.Movable
 {
@@ -80,7 +81,10 @@ namespace Asteroids.Movable
                 if (!_fieldCalculationHelper.NewPositionInPortal(out newPosition, movableComponent.Position,
                     movableComponent.Velocity))
                 {
-                    Debug.LogError("Can't calculate new position!");
+                    var velocityFromCenter = (movableComponent.Position - Vector2.zero).normalized;
+                    if(_fieldCalculationHelper.NewPositionInPortal(out newPosition, movableComponent.Position,
+                        velocityFromCenter))
+                        Debug.LogWarning("Can't calculate new position!");
                 }
             }
                 

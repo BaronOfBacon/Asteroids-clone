@@ -26,6 +26,7 @@ namespace Asteroids.Asteroid
         private Collider2D[] _buffer;
         private float _newAsteroidSpawnTimeLeft;
         private GameObject _avoidableSpawnObject;
+        private readonly int _playerLayerMask = LayerMask.NameToLayer("Player");
         
         private GameObject _asteroidFractionPrefab;
         private GameObject _asteroidPrefab;
@@ -58,12 +59,7 @@ namespace Asteroids.Asteroid
             MessageDispatcher.Subscribe(MessageType.SpawnAsteroidFragments, SpawnAsteroidFractions);
             MessageDispatcher.Subscribe(MessageType.AsteroidKilled, HandleAsteroidDestroyed);
             MessageDispatcher.Subscribe(MessageType.PlayerDied, HandlePlayerDeath);
-            MessageDispatcher.Subscribe(MessageType.RestartGame, Restart);
-        }
-
-        public void SetSpawnAvoidableObject(GameObject avoidableSpawnObject)
-        {
-            _avoidableSpawnObject = avoidableSpawnObject;
+            MessageDispatcher.Subscribe(MessageType.PlayerSpawned, HandlePlayerSpawned);
         }
 
         public override void Process(Entity entity)
@@ -84,20 +80,6 @@ namespace Asteroids.Asteroid
                 else
                     _newAsteroidSpawnTimeLeft -= Time.deltaTime;
             }
-        }
-
-        public void Start()
-        {
-            if (_enabled) return;
-            if (_isFirstStart)
-            {
-                for (var i = 0; i < _asteroidsInitSpawnAmount; i++)
-                {
-                    SpawnAsteroidRandomly();
-                }
-            }
-            
-            _enabled = true;
         }
 
         private void SpawnAsteroidRandomly()
@@ -190,18 +172,15 @@ namespace Asteroids.Asteroid
         private Vector3 GetAsteroidRandomSpawnPosition()
         {
             Vector3 position;
+            float distance;
             do
             {
-                Vector2 avoidableCenter;
-                    if(_avoidableSpawnObject != null)
-                        avoidableCenter = _avoidableSpawnObject.transform.position;
-                    else
-                    {
-                        avoidableCenter = Vector2.zero;
-                    }
-                position = _fieldCalculationHelper.GetSafetySpawnPosition(4f, 10f, 
-                    avoidableCenter);
-            } while (Physics2D.OverlapCircleNonAlloc(position, OVERLAP_RADIUS, _buffer) != 0);
+                position = _fieldCalculationHelper.GetSafetySpawnPosition(4f, 10f,
+                    _avoidableSpawnObject.transform.position);
+
+                distance = Vector3.Distance(_avoidableSpawnObject.transform.position, position);
+            //} while (Physics2D.OverlapCircleNonAlloc(position, OVERLAP_RADIUS, _buffer, _playerLayerMask) != 0);
+            } while (distance < OVERLAP_RADIUS);
 
             return position;
         }
@@ -217,7 +196,7 @@ namespace Asteroids.Asteroid
             }
         }
         
-        private void Restart(object arg)
+        private void RespawnAllAsteroids(object arg)
         {
             _enabled = true;
             
@@ -228,13 +207,21 @@ namespace Asteroids.Asteroid
                 SpawnAsteroidRandomly();
             }
         }
+
+        private void HandlePlayerSpawned(object player)
+        {
+            var playerEntity = (Entity)player;
+            _avoidableSpawnObject = playerEntity.GameObject;
+            _enabled = true;
+            RespawnAllAsteroids(player);
+        }
         
         public override void Destroy()
         {
             MessageDispatcher.Unsubscribe(MessageType.SpawnAsteroidFragments, SpawnAsteroidFractions);
             MessageDispatcher.Unsubscribe(MessageType.AsteroidKilled, HandleAsteroidDestroyed);
             MessageDispatcher.Unsubscribe(MessageType.PlayerDied, HandlePlayerDeath);
-            MessageDispatcher.Unsubscribe(MessageType.RestartGame, Restart);
+            MessageDispatcher.Subscribe(MessageType.PlayerSpawned, HandlePlayerSpawned);
         }
     }
 }
